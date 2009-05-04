@@ -3,11 +3,13 @@ package Generated;
 import java_cup.runtime.*;
 import static Generated.SokoParserSym.*;
 import java.io.IOException;
+import static source.TipoPiazzamento.*;
 
 
+ 
 %%
 
-%class Lexer
+%class Lexer 
 %unicode
 %line
 %column
@@ -88,10 +90,10 @@ import java.io.IOException;
 	{end}		{/*System.out.println("end");*/ return new Symbol(SokoParserSym.END);}
 	{dim}		{/*System.out.println("dim");*/ return new Symbol(SokoParserSym.DIM);}
 	{Nmob}		{/*System.out.println("Nmob");*/ return new Symbol(SokoParserSym.NMOB);}
-	{mob}		{/*System.out.println("mob");*/ return new Symbol(SokoParserSym.MOB);}
-	{fissi}		{/*System.out.println("fissi");*/ return new Symbol(SokoParserSym.FISSI);}
-	{goal} 		{/*System.out.println("goal");*/ return new Symbol(SokoParserSym.GOAL);}
-	{soko} 		{/*System.out.println("soko");*/ return new Symbol(SokoParserSym.SOKO);}
+	{mob}		{/*System.out.println("mob");*/ return new Symbol(SokoParserSym.MOB, new TipoPiazzamento.BOX);}
+	{fissi}		{/*System.out.println("fissi");*/ return new Symbol(SokoParserSym.FISSI, TipoPiazzamento.MURO);}
+	{goal} 		{/*System.out.println("goal");*/ return new Symbol(SokoParserSym.GOAL, TipoPiazzamento.GOAL);}
+	{soko} 		{/*System.out.println("soko");*/ return new Symbol(SokoParserSym.SOKO, TipoPiazzamento.SOKOBAN);}
 
 	{uguale}	{/*System.out.println("uguale");*/ return new Symbol(SokoParserSym.UGUALE);}
 	{minug}		{/*System.out.println("minug");*/ return new Symbol(SokoParserSym.MINUG);}
@@ -101,8 +103,8 @@ import java.io.IOException;
 	{decr}		{/*System.out.println("decr");*/ return new Symbol(SokoParserSym.DECR);}
 	{to} 		{/*System.out.println("to");*/ return new Symbol(SokoParserSym.TO);}
 	{tc} 		{/*System.out.println("tc");*/ return new Symbol(SokoParserSym.TC);}
-	{int} 		{/*System.out.println("int");*/ return new Symbol(SokoParserSym.INT);}
-	{id} 		{/*System.out.println("id");*/ return new Symbol(SokoParserSym.ID);}
+	{int} 		{/*System.out.println("int");*/ return new Symbol(SokoParserSym.INT, new Integer(yytext()));}
+	{id} 		{/*System.out.println("id");*/ return new Symbol(SokoParserSym.ID,new String(yytext()));}
 
 	{vir}		{/*System.out.println("virgola");*/ return new Symbol(SokoParserSym.VIR);}
 	{pv}		{/*System.out.println("pv");*/ return new Symbol(SokoParserSym.PV);}

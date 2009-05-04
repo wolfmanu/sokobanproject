@@ -1,7 +1,12 @@
+package source;
+
 
 import java.lang.*;
 import java.awt.*;
 import java.applet.*;
+
+import source.SokoPieces.*;
+
 
 public class Sokoban extends Applet {
 
@@ -303,20 +308,12 @@ public class Sokoban extends Applet {
 	
 	};
 	
-	final static char wall = '#';
-	final static char floor = ' ';
-	final static char me = '@';
-	final static char megoal = '&';
-	final static char occupied = '*';
-	final static char dollar = '$';
-	final static char cr = 'M';
-	final static char blank = '^';
-	final static char goal = '.';
+	
 	Image tiles[] = new Image[128];
 	
 	AudioClip buzz, wow;
 	
-	char[] level;
+	SokoPieces[] level;
 	int currlevel, w, h, push, move;
 	int lastcount, pos1, pos2, pos3;
 	Rectangle lastrect;
@@ -384,7 +381,7 @@ public class Sokoban extends Applet {
 
 		int y = -16 + h, x = -16 + w;
 		for (int i = 0; i < level.length; i++)
-			if (level[i] == cr) {
+			if (level[i] == SokoPieces.cr) {
 				x = -16 + w; y += 16;
 			} else {
 				x += 16;
