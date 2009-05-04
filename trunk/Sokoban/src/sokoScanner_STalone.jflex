@@ -1,13 +1,20 @@
 import java_cup.runtime.*;
-
+import static g.SokoParserSym.*;
+package g;
 %%
 
 %class Lexer
 %unicode
-//%standalone
-%cup
 %line
 %column
+
+%public
+ 
+%cupsym SokoParserSym
+//%standalone
+%cup
+//%cupdebug
+
 
 %{
       private Symbol symbol(int type)
@@ -17,7 +24,7 @@ import java_cup.runtime.*;
 
       private Symbol symbol(int type, Object value)
       {
-            return new Symbol(type, yyline, yycolumn, value);	
+           return new Symbol(type, yyline, yycolumn, value);	
       }
 %}
 
