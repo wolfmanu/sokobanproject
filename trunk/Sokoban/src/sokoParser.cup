@@ -1,7 +1,7 @@
-package g;
+package Generated;
 
 import java_cup.runtime.*;
-//import cup.java_cup.runtime.*;
+
 
 terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE, MINUG, MAGUG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
 
@@ -72,13 +72,13 @@ piazzamento ::=	tipo TO coppia TC PV  {:System.out.println("piazzamento"); :} |
 				tipo TO coppia TC error {: parser.report_error("piazzamento errore",null); :}|
 				tipo TO coppia error {: parser.report_fatal_error("piazzamento errore",null); :}|
 				tipo TO error TC PV {: parser.report_fatal_error("piazzamento errore",null); :}|
-				tipo error coppia TC PV {: parser.report_fatal_error("piazzamento errore",null); :}|
+				tipo error coppia TC PV {: parser.report_fatal_error("piazzamento errore",null); :};
 tipo ::=	MOB |
 		FISSI |
-		GOAL |
+		GOAL | 
 		SOKO ;
 coppia ::=	coordinata:t1 VIR coordinata:t2{: 
-											Object[] t;
+											Object[] t=null;
 											t[0]=t1;
 											t[1]=t2;
 											RESULT=t; :} |
@@ -86,21 +86,8 @@ coppia ::=	coordinata:t1 VIR coordinata:t2{:
 					{: parser.report_fatal_error("coppia errore",null); :}|
 			error coordinata 
 					{: parser.report_fatal_error("coppia errore",null); :};
-coordinata ::=	INT:t {: RESULT=t:} |
-		ID:t {: RESULT=t:};
+					
+coordinata ::=	INT:t {: RESULT=t; :} |
+		ID:t {: RESULT=t; :};
 
 sezioneIF ::= IF TO ID segno coordinata TC contenuto END IF PV {:System.out.println("sezioneIF"); :};
-
-
-
-
-
-
-
-
-
-
-
-
-
-

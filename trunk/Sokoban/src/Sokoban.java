@@ -1,3 +1,4 @@
+
 import java.lang.*;
 import java.awt.*;
 import java.applet.*;
@@ -332,7 +333,7 @@ public class Sokoban extends Applet {
 		buzz = getAudioClip(getDocumentBase(), "buzz.au");
 		wow = getAudioClip(getDocumentBase(), "wow.au");
 		MediaTracker tracker = new MediaTracker(this);
-		Image j = getImage(getDocumentBase(), "Sokoban.gif");
+		Image j = getImage(getDocumentBase(), "sokoban.gif");
 		tracker.addImage(j,0);
 		try { tracker.waitForAll(); } catch (InterruptedException e) {}
 		String tile = "# @$.&*";
