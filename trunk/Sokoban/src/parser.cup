@@ -1,0 +1,57 @@
+import java_cup.runtime.*;
+
+terminal VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE, MINUG, MAGUG, INCR, DECR, TO, TC, INT, ID, VIR, PV;
+
+non terminal cfile, part, funz, dichiar,  lista_var,  var,  elem,  punt,  tipo_l,  tipo,  assegn,  tipo_x,  tipo_y,  ass_op,  			ass_op_l;
+
+start with cfile;
+
+
+cfile 	::= 	part | cfile part
+	{:System.out.println("cfile"); :};
+
+part	::=	dichiar ;
+
+dichiar	::=	tipo_l lista_var PUNTOEVIRGOLA
+	{:System.out.println("dichiar"); :};
+
+tipo	::= 	TYPE | VOID TIMES 
+		{:System.out.println("tipo"); :}; 
+
+tipo_y 	::= 	 tipo_x |  tipo_y tipo_x ;
+
+tipo_x	::= 	STORAGE_SPEC | SIGN_MODIFIER  | LENG_MODIFIER 
+		{:System.out.println("tipo_x"); :};
+
+
+
+tipo_l	::=	tipo |  tipo_y tipo
+		{:System.out.println("tipo_l"); :}; 
+
+
+
+lista_var ::=	elem | lista_var VIRGOLA elem ;
+
+elem	::=	 punt var assegn| var assegn | punt var | var ;	
+
+punt	::= 	TIMES | punt TIMES ;
+
+var	::= 	ID | ID QUADRAOPEN CONST QUADRACLOSED ;
+
+assegn	::=	UGUALE ass_op ;
+
+ass_op	::= 	ID | CONST | CHARCONST | STRINGCONST | GRAFFAOPEN ass_op_l GRAFFACLOSED ;
+
+ass_op_l::=	ass_op | ass_op_l VIRGOLA ass_op ;
+
+
+
+
+
+
+
+
+
+
+
+

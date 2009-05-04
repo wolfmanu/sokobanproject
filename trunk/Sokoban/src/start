@@ -1,0 +1,10 @@
+#!/bin/bash -f
+
+jflex sokoScanner.jflex
+java -cp /media/ACERDATA/Documenti/Politecnico/anno4/Tesina_LT/tooljava/cup.jar:. java_cup.Main -parser sokoParser sokoParser.cup
+#cup -parser sokoParser sokoParser.cup
+javac -cp /media/ACERDATA/Documenti/Politecnico/anno4/Tesina_LT/tooljava/cup.jar Lexer.java sym.java sokoParser.java Main.java 
+java -cp /media/ACERDATA/Documenti/Politecnico/anno4/Tesina_LT/tooljava/cup.jar:. Main mappa.map
+rm sym.java Lexer.java sokoParser.java CUP\$sokoParser\$actions.class Lexer.class Main.class sokoParser.class sym.class
+
+

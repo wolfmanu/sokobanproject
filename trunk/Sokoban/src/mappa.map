@@ -1,0 +1,51 @@
+var width = 20, height = 15;
+var x;
+
+
+#Dimensioni h=height, w=width;
+#BlocchiMobili 5;
+
+var y = 6;
+
+// delimitazione della mappa con i muri perimetrali
+for(x=1;x<=width;x++)
+   #F(x,1);
+   #F(x,height);
+end for;
+for(x=1;x<=height;x++)
+   #F(1,x);
+   #F(width,x);
+end for;
+
+if(x==1)
+   #F(x,1);
+   for(x=1;x<=width;x++)
+      #F(x,height);
+   end for;
+end if;
+
+for(x=1;x<=width;x++)
+   #F(x,height);
+   if(x==1)
+      #F(x,1);
+   end if;
+end for;
+
+// posizionamento dei blocchi mobili
+#M(3,4);
+#M(y,y);
+
+// posizionamento degli obiettivi
+#G(2,3);
+#G(3,5);
+
+// posizionamento del sokoban
+#S(2,2);
+
+#M(9,9);
+#M(6,4);
+#G(5,5);
+#M(4,4);
+#G(6,6);
+#G(7,7);
+
