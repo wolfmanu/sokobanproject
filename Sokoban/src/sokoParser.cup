@@ -7,7 +7,9 @@ import source.SokoPieces.*;
 import source.AzionePiazzamento;
 import source.SokoPieces;
 import source.ListaAzioni;
- 
+import source.TipoPiazzamento;
+import source.TipoCondizione;
+import source.Condizione;
 
 
 parser code
@@ -46,12 +48,12 @@ action code
 	
 	SokoPieces[][] mappa=null;
 	
-	ArrayList<ListaAzioni> listaAzioni=new ArrayList<ListaAzioni>();
+	//ArrayList<ListaAzioni> listaAzioniTot=new ArrayList<ListaAzioni>();
 
 :}
 
 
-terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE, MINUG, MAGUG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
+terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE,UGUALEUGUALE, MINUG, MAGUG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
 
 non terminal 	map, part, def, elemento, altezza, larghezza, corpo, definizioni,  definizione, dichiar, numBlocchi, dimBlocchi,
 		cicloFor, contenuto, assegnazione, termine, segno, avanzamento, piazzamento, tipo, coppia, coordinata, sezioneIF;
@@ -104,37 +106,71 @@ corpo 	::=	cicloFor {:System.out.println("corpo__"); :}|
 
 cicloFor ::=	FOR TO assegnazione PV termine PV avanzamento TC contenuto END FOR PV  {:System.out.println("cicloFor"); :}/*|
 				FOR error {: parser.report_error("for errore",null); :}*/;
+				
 assegnazione::=	ID UGUALE ID |
 		ID UGUALE INT ;
-termine	::=	ID segno ID |
-		ID segno INT ;
-segno	::=	UGUALE UGUALE |
-		MAGUG |
-		MINUG |
-		DIVERSO ;
+
+termine	::=	ID:id1 segno:s ID:id2
+			{:
+				RESULT=new Condizione(id1,id2,s);
+			:}|
+		ID segno INT 
+			{:
+				RESULT=new Condizione(id1,id2,s);
+			:};
+
+segno	::=	UGUALEUGUALE:s {: RESULT=s; :}|
+		MAGUG :s {: RESULT=s; :}|
+		MINUG :s {: RESULT=s; :}|
+		DIVERSO :s {: RESULT=s; :};
+		
 avanzamento ::=	ID INCR |
 		ID DECR ;  		/*possibile ampliamento con espressioni matematiche */
 
-contenuto ::=	piazzamento /*creo lista azioni */| 
-		cicloFor /*creo lista azioni */|
-		sezioneIF /*creo lista azioni */|
-		contenuto piazzamento /*aggiungo a lista azioni */|
-		contenuto sezioneIF /*aggiungo a lista azioni */|
-		contenuto cicloFor /*aggiungo a lista azioni *//*|
+contenuto ::=	piazzamento:p /*creo lista azioni */
+			{:
+				RESULT=new ListaAzioni(p);
+			:}	| 
+		cicloFor:f /*creo lista azioni */
+		{:
+			RESULT=new ListaAzioni(f);
+		:}	|
+		sezioneIF :i /*creo lista azioni */
+		{:
+			RESULT=new ListaAzioni(i);
+		:}	|
+		contenuto:c piazzamento:p /*aggiungo a lista azioni */
+		{:
+			((ListaAzioni)c).AddAzione(p);
+			RESULT=c;
+		:}	|
+		contenuto:c sezioneIF:i /*aggiungo a lista azioni */
+		{:
+			((ListaAzioni)c).AddAzione(i);
+			RESULT=c;
+		:}	|
+		contenuto:c cicloFor:f /*aggiungo a lista azioni */
+		{:
+			((ListaAzioni)c).AddAzione(f);
+			RESULT=c;
+		:}	
+		/*|
 		error {: parser.report_error("contenuto errore",null); :}|
 		contenuto error {: parser.report_error("contenuto errore",null); :}*/;
 
 piazzamento ::=	tipo:t1 TO coppia:cp TC PV  {:
-							
+							((AzionePiazzamento)cp).setType(t1);
+							RESULT=cp;
 	:} /*| 
 				tipo TO coppia TC error {: parser.report_error("piazzamento errore",null); :}|
 				tipo error {: parser.report_error("piazzamento errore",null); :}|
 				tipo TO error TC PV {: parser.report_error("piazzamento errore",null); :}*/
 				;
-tipo ::=	MOB |
-		FISSI |
-		GOAL | 
-		SOKO ;
+tipo ::=	MOB:t {: RESULT = t; :} |
+		FISSI:t {: RESULT = t; :} |
+		GOAL:t {: RESULT = t; :} | 
+		SOKO:t {: RESULT = t; :} ;
+		
 coppia ::=	coordinata:t1 VIR coordinata:t2{: 
 											RESULT=new AzionePiazzamento(t1,t2);
 											 :} /*|
@@ -146,7 +182,12 @@ coppia ::=	coordinata:t1 VIR coordinata:t2{:
 coordinata ::=	INT:t {: RESULT=t; :} |
 		ID:t {: RESULT=t; :};
 
-sezioneIF ::= IF TO ID segno coordinata TC contenuto END IF PV {:System.out.println("sezioneIF"); :}/*|
+
+sezioneIF ::= IF TO termine TC contenuto END IF PV 
+				{:
+					
+					
+				:}/*|
 				IF error {: parser.report_error("sezione if errore",null); :}*/;
 
 

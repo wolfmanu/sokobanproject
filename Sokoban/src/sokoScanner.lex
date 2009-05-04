@@ -3,8 +3,8 @@ package Generated;
 import java_cup.runtime.*;
 import static Generated.SokoParserSym.*;
 import java.io.IOException;
-import static source.TipoPiazzamento.*;
-
+import source.TipoPiazzamento;
+import source.TipoCondizione;
 
  
 %%
@@ -62,6 +62,7 @@ import static source.TipoPiazzamento.*;
 	soko	= #[Ss]
 	
 //espressioni, variabili
+	ugualeuguale = "=="
 	uguale	= "="
 	minug	= "<="
 	magug	= ">="
@@ -90,16 +91,17 @@ import static source.TipoPiazzamento.*;
 	{end}		{/*System.out.println("end");*/ return new Symbol(SokoParserSym.END);}
 	{dim}		{/*System.out.println("dim");*/ return new Symbol(SokoParserSym.DIM);}
 	{Nmob}		{/*System.out.println("Nmob");*/ return new Symbol(SokoParserSym.NMOB);}
-	{mob}		{/*System.out.println("mob");*/ return new Symbol(SokoParserSym.MOB, new TipoPiazzamento.BOX);}
+	{mob}		{/*System.out.println("mob");*/ return new Symbol(SokoParserSym.MOB, TipoPiazzamento.BOX);}
 	{fissi}		{/*System.out.println("fissi");*/ return new Symbol(SokoParserSym.FISSI, TipoPiazzamento.MURO);}
 	{goal} 		{/*System.out.println("goal");*/ return new Symbol(SokoParserSym.GOAL, TipoPiazzamento.GOAL);}
 	{soko} 		{/*System.out.println("soko");*/ return new Symbol(SokoParserSym.SOKO, TipoPiazzamento.SOKOBAN);}
 
-	{uguale}	{/*System.out.println("uguale");*/ return new Symbol(SokoParserSym.UGUALE);}
-	{minug}		{/*System.out.println("minug");*/ return new Symbol(SokoParserSym.MINUG);}
-	{magug}		{/*System.out.println("magug");*/ return new Symbol(SokoParserSym.MAGUG);}
+	{ugualeuguale} {/*System.out.println("ugualeugulae");*/ return new Symbol(SokoParserSym.UGUALEUGUALE, TipoCondizione.UGUALEUGUALE);}
+	{uguale}	{/*System.out.println("uguale");*/ return new Symbol(SokoParserSym.UGUALE, TipoCondizione.UGUALE);}
+	{minug}		{/*System.out.println("minug");*/ return new Symbol(SokoParserSym.MINUG, TipoCondizione.MINUG);}
+	{magug}		{/*System.out.println("magug");*/ return new Symbol(SokoParserSym.MAGUG, TipoCondizione.MAGUG);}
 	{increm}	{/*System.out.println("increm");*/ return new Symbol(SokoParserSym.INCR);}
-	{diverso}	{/*System.out.println("diverso");*/ return new Symbol(SokoParserSym.DIVERSO);}
+	{diverso}	{/*System.out.println("diverso");*/ return new Symbol(SokoParserSym.DIVERSO, TipoCondizione.DIVERSO);}
 	{decr}		{/*System.out.println("decr");*/ return new Symbol(SokoParserSym.DECR);}
 	{to} 		{/*System.out.println("to");*/ return new Symbol(SokoParserSym.TO);}
 	{tc} 		{/*System.out.println("tc");*/ return new Symbol(SokoParserSym.TC);}
