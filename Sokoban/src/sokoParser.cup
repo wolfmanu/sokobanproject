@@ -1,0 +1,92 @@
+import java_cup.runtime.*;
+//import cup.java_cup.runtime.*;
+
+terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE, MINUG, MAGUG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
+
+non terminal 	map, part, def, elemento, altezza, larghezza, corpo, definizioni,  definizione, dichiar, numBlocchi, dimBlocchi,
+		cicloFor, contenuto, assegnazione, termine, segno, avanzamento, piazzamento, tipo, coppia, coordinata, sezioneIF;
+
+start with map;
+
+
+map 	::= 	definizioni dichiar part {:System.out.println("map"); :}| 
+		dichiar part 
+		{:System.out.println("map"); :};
+ 
+dichiar	::=	dimBlocchi numBlocchi {:System.out.println("dichiar1__"); :}| 		// #Dimensioni h=height, w=width;
+		numBlocchi dimBlocchi {:System.out.println("dichiar2__"); :};		// #BlocchiMobili 5;
+
+dimBlocchi ::= 	DIM altezza VIR larghezza PV {:System.out.println("dimBlocchi__"); :}|
+		DIM larghezza VIR altezza PV {:System.out.println("dimBlocchi__"); :};
+altezza	::=	HEIGHT UGUALE INT |
+		HEIGHT UGUALE ID ;
+larghezza ::=	WIDTH UGUALE INT |
+		WIDTH UGUALE ID ;
+
+numBlocchi ::=	NMOB INT PV ;
+
+definizioni ::=	elemento |
+		definizioni elemento {:System.out.println("definizioni__"); :} ;
+
+elemento ::= 	VAR def PV ;	// definizioni di varabili
+
+def	::=	def VIR definizione |
+		definizione;
+
+definizione ::= ID UGUALE INT {:System.out.println("definizione1__"); :}|
+		ID UGUALE ID {:System.out.println("definizione2__"); :}|
+		ID {:System.out.println("definizione3__"); :};
+
+part	::=	corpo |
+		elemento | 
+		part elemento |
+		part corpo ;
+
+corpo 	::=	cicloFor {:System.out.println("corpo__"); :}|
+		piazzamento {:System.out.println("corpo__"); :}|
+		sezioneIF {:System.out.println("corpo__"); :};
+
+cicloFor ::=	FOR TO assegnazione PV termine PV avanzamento TC contenuto END FOR PV  {:System.out.println("cicloFor"); :};
+assegnazione::=	ID UGUALE ID |
+		ID UGUALE INT ;
+termine	::=	ID segno ID |
+		ID segno INT ;
+segno	::=	UGUALE UGUALE |
+		MAGUG |
+		MINUG |
+		DIVERSO ;
+avanzamento ::=	ID INCR |
+		ID DECR ;  		/*possibile ampliamento con espressioni matematiche */
+
+contenuto ::=	piazzamento | 
+		cicloFor |
+		sezioneIF |
+		contenuto piazzamento |
+		contenuto sezioneIF |
+		contenuto cicloFor ;
+
+piazzamento ::=	tipo TO coppia TC PV  {:System.out.println("piazzamento"); :};
+
+tipo ::=	MOB |
+		FISSI |
+		GOAL |
+		SOKO ;
+coppia ::=	coordinata VIR coordinata ;
+coordinata ::=	INT |
+		ID ;
+
+sezioneIF ::= IF TO ID segno coordinata TC contenuto END IF PV {:System.out.println("sezioneIF"); :};
+
+
+
+
+
+
+
+
+
+
+
+
+
+

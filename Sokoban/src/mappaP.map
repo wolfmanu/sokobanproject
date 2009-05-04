@@ -1,0 +1,18 @@
+#BlocchiMobili 5;
+#Dimensioni h=height, w=3;
+
+
+if(x==1)
+	  #F(x,1);
+	for(x=1;x<=width;x++)
+  	 #F(x,height);
+end for;
+end if;
+
+for(x=1;x<=width;x++)
+  	 #F(x,height);
+	if(x==1)
+	  #F(x,1);
+	end if;
+end for;
+
