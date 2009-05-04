@@ -1,0 +1,12 @@
+#Mon May 04 14:53:19 CEST 2009
+//src/sokoParser.cup/cup-compact-red=false
+//src/sokoParser.cup/cup-debug=false
+//src/sokoParser.cup/cup-expected-conflicts=0
+//src/sokoParser.cup/cup-no-positions=false
+//src/sokoParser.cup/cup-no-scanner=false
+//src/sokoParser.cup/cup-non-terms=false
+//src/sokoParser.cup/cup-output=src
+//src/sokoParser.cup/cup-parser-class=SokoParserCup
+//src/sokoParser.cup/cup-symbols-class=SokoParserSym
+//src/sokoParser.cup/cup-symbols-if=true
+eclipse.preferences.version=1
