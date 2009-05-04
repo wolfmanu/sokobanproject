@@ -1,14 +1,16 @@
+package Generated;
 import java.io.*;
 
-public class Main
+
+public class SokoCompiler
 {
     static public void main(String argv[])
     {
     try {
         // Istanzio lo scanner aprendo il file di ingresso argv[0]
-        Lexer l = new Lexer(new FileReader(argv[0]));
+        Lexer l = new Lexer(new FileReader("Maps/mappa.map"));
         // Istanzio il parser
-        sokoParser p = new sokoParser(l);
+        SokoParserCup p = new SokoParserCup(l);
         // Avvio il parser
         Object result = p.parse();
         }

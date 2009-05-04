@@ -1,27 +1,43 @@
-package g;
+package Generated;
+
 import java_cup.runtime.*;
+import static Generated.SokoParserSym.*;
+import java.io.IOException;
 
 
 %%
 
 %class Lexer
 %unicode
+%line
+%column
+
+%public
+ 
+%cupsym SokoParserSym  
 //%standalone
 %cup
-//%line  
-//%colum 
+//%cupdebug
+
    
-//%{
-//      private Symbol symbol(int type)
-//      {
- //           return new Symbol(type, yyline, yycolumn);
- //     }
-//
- //     private Symbol symbol(int type, Object value)
- //     {
- //           return new Symbol(type, yyline, yycolumn, value);	
- //     }
-//%}*/
+%{
+      private Symbol sym(int type)
+        {
+                return new Symbol(type, yyline, yycolumn); 
+        }
+
+        private Symbol sym(int type, Object value)
+        {
+                return new Symbol(type, yyline, yycolumn, value);
+        }
+
+        private void error()
+        throws IOException
+        {
+                throw new IOException("illegal text at line = "+yyline+", column = "+yycolumn+", text = '"+yytext()+"'");
+        }
+
+%}
 
 //spazi, a capo, separatori
 	spazi	= \t| " "
@@ -64,32 +80,32 @@ import java_cup.runtime.*;
 %%
 
 <YYINITIAL> {
-	{var}		{/*System.out.println("var");*/ return new Symbol(sym.VAR);}
-	{height}	{/*System.out.println("height");*/ return new Symbol(sym.HEIGHT);}
-	{width}		{/*System.out.println("width");*/ return new Symbol(sym.WIDTH);}
-	{for}		{/*System.out.println("for");*/ return new Symbol(sym.FOR);}
-	{if}		{/*System.out.println("if");*/ return new Symbol(sym.IF);}
-	{end}		{/*System.out.println("end");*/ return new Symbol(sym.END);}
-	{dim}		{/*System.out.println("dim");*/ return new Symbol(sym.DIM);}
-	{Nmob}		{/*System.out.println("Nmob");*/ return new Symbol(sym.NMOB);}
-	{mob}		{/*System.out.println("mob");*/ return new Symbol(sym.MOB);}
-	{fissi}		{/*System.out.println("fissi");*/ return new Symbol(sym.FISSI);}
-	{goal} 		{/*System.out.println("goal");*/ return new Symbol(sym.GOAL);}
-	{soko} 		{/*System.out.println("soko");*/ return new Symbol(sym.SOKO);}
+	{var}		{/*System.out.println("var");*/ return new Symbol(SokoParserSym.VAR);}
+	{height}	{/*System.out.println("height");*/ return new Symbol(SokoParserSym.HEIGHT);}
+	{width}		{/*System.out.println("width");*/ return new Symbol(SokoParserSym.WIDTH);}
+	{for}		{/*System.out.println("for");*/ return new Symbol(SokoParserSym.FOR);}
+	{if}		{/*System.out.println("if");*/ return new Symbol(SokoParserSym.IF);}
+	{end}		{/*System.out.println("end");*/ return new Symbol(SokoParserSym.END);}
+	{dim}		{/*System.out.println("dim");*/ return new Symbol(SokoParserSym.DIM);}
+	{Nmob}		{/*System.out.println("Nmob");*/ return new Symbol(SokoParserSym.NMOB);}
+	{mob}		{/*System.out.println("mob");*/ return new Symbol(SokoParserSym.MOB);}
+	{fissi}		{/*System.out.println("fissi");*/ return new Symbol(SokoParserSym.FISSI);}
+	{goal} 		{/*System.out.println("goal");*/ return new Symbol(SokoParserSym.GOAL);}
+	{soko} 		{/*System.out.println("soko");*/ return new Symbol(SokoParserSym.SOKO);}
 
-	{uguale}	{/*System.out.println("uguale");*/ return new Symbol(sym.UGUALE);}
-	{minug}		{/*System.out.println("minug");*/ return new Symbol(sym.MINUG);}
-	{magug}		{/*System.out.println("magug");*/ return new Symbol(sym.MAGUG);}
-	{increm}	{/*System.out.println("increm");*/ return new Symbol(sym.INCR);}
-	{diverso}	{/*System.out.println("diverso");*/ return new Symbol(sym.DIVERSO);}
-	{decr}		{/*System.out.println("decr");*/ return new Symbol(sym.DECR);}
-	{to} 		{/*System.out.println("to");*/ return new Symbol(sym.TO);}
-	{tc} 		{/*System.out.println("tc");*/ return new Symbol(sym.TC);}
-	{int} 		{/*System.out.println("int");*/ return new Symbol(sym.INT);}
-	{id} 		{/*System.out.println("id");*/ return new Symbol(sym.ID);}
+	{uguale}	{/*System.out.println("uguale");*/ return new Symbol(SokoParserSym.UGUALE);}
+	{minug}		{/*System.out.println("minug");*/ return new Symbol(SokoParserSym.MINUG);}
+	{magug}		{/*System.out.println("magug");*/ return new Symbol(SokoParserSym.MAGUG);}
+	{increm}	{/*System.out.println("increm");*/ return new Symbol(SokoParserSym.INCR);}
+	{diverso}	{/*System.out.println("diverso");*/ return new Symbol(SokoParserSym.DIVERSO);}
+	{decr}		{/*System.out.println("decr");*/ return new Symbol(SokoParserSym.DECR);}
+	{to} 		{/*System.out.println("to");*/ return new Symbol(SokoParserSym.TO);}
+	{tc} 		{/*System.out.println("tc");*/ return new Symbol(SokoParserSym.TC);}
+	{int} 		{/*System.out.println("int");*/ return new Symbol(SokoParserSym.INT);}
+	{id} 		{/*System.out.println("id");*/ return new Symbol(SokoParserSym.ID);}
 
-	{vir}		{/*System.out.println("virgola");*/ return new Symbol(sym.VIR);}
-	{pv}		{/*System.out.println("pv");*/ return new Symbol(sym.PV);}
+	{vir}		{/*System.out.println("virgola");*/ return new Symbol(SokoParserSym.VIR);}
+	{pv}		{/*System.out.println("pv");*/ return new Symbol(SokoParserSym.PV);}
 
 	{comm}		{/*System.out.println("commento");*/  yybegin(COMMENTO); }
 	
