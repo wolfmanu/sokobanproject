@@ -1,3 +1,4 @@
+package g;
 import java_cup.runtime.*;
 
 
@@ -7,9 +8,9 @@ import java_cup.runtime.*;
 %unicode
 //%standalone
 %cup
-//%line
-//%column
-
+//%line  
+//%colum 
+   
 //%{
 //      private Symbol symbol(int type)
 //      {
@@ -39,7 +40,7 @@ import java_cup.runtime.*;
 	Nmob	= #[bB]locchiMobili
 	mob	= #[mM]
 	fissi	= #[fF]
-	goal	= #[gG]
+	goal	= #[gG] 
 	soko	= #[Ss]
 	
 //espressioni, variabili
