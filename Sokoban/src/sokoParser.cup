@@ -1,3 +1,5 @@
+package g;
+
 import java_cup.runtime.*;
 //import cup.java_cup.runtime.*;
 
@@ -22,6 +24,7 @@ altezza	::=	HEIGHT UGUALE INT |
 		HEIGHT UGUALE ID ;
 larghezza ::=	WIDTH UGUALE INT |
 		WIDTH UGUALE ID ;
+		
 
 numBlocchi ::=	NMOB INT PV ;
 
@@ -58,12 +61,12 @@ segno	::=	UGUALE UGUALE |
 avanzamento ::=	ID INCR |
 		ID DECR ;  		/*possibile ampliamento con espressioni matematiche */
 
-contenuto ::=	piazzamento | 
-		cicloFor |
-		sezioneIF |
-		contenuto piazzamento |
-		contenuto sezioneIF |
-		contenuto cicloFor ;
+contenuto ::=	piazzamento /*creo lista azioni */| 
+		cicloFor /*creo lista azioni */|
+		sezioneIF /*creo lista azioni */|
+		contenuto piazzamento /*aggiungo a lista azioni */|
+		contenuto sezioneIF /*aggiungo a lista azioni */|
+		contenuto cicloFor /*aggiungo a lista azioni */;
 
 piazzamento ::=	tipo TO coppia TC PV  {:System.out.println("piazzamento"); :};
 
@@ -71,9 +74,13 @@ tipo ::=	MOB |
 		FISSI |
 		GOAL |
 		SOKO ;
-coppia ::=	coordinata VIR coordinata ;
-coordinata ::=	INT |
-		ID ;
+coppia ::=	coordinata:t1 VIR coordinata:t2{: 
+	Object[] t;
+	t[0]=t1;
+	t[1]=t2;
+	RESULT=t; :} ;
+coordinata ::=	INT:t {: RESULT=t:} |
+		ID:t {: RESULT=t:};
 
 sezioneIF ::= IF TO ID segno coordinata TC contenuto END IF PV {:System.out.println("sezioneIF"); :};
 
