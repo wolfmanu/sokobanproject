@@ -10,7 +10,9 @@ import source.ListaAzioni;
 import source.TipoPiazzamento;
 import source.TipoCondizione;
 import source.Condizione;
-
+import source.intVar;
+import source.strVar;
+import source.element;
 
 parser code
 {:
@@ -53,7 +55,7 @@ action code
 :}
 
 
-terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE,UGUALEUGUALE, MINUG, MAGUG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
+terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE,UGUALEUGUALE, MINUG, MAGUG,MIN, MAG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
 
 non terminal 	map, part, def, elemento, altezza, larghezza, corpo, definizioni,  definizione, dichiar, numBlocchi, dimBlocchi,
 		cicloFor, contenuto, assegnazione, termine, segno, avanzamento, piazzamento, tipo, coppia, coordinata, sezioneIF;
@@ -100,7 +102,33 @@ part	::=	corpo |
 		part error {: parser.report_error("part errore",null); :}*/;
 
 corpo 	::=	cicloFor {:System.out.println("corpo__"); :}|
-		piazzamento {:System.out.println("corpo__"); :}|
+		piazzamento:p 
+		{: 
+			int x=0, y=0;
+			AzionePiazzamento ap=(AzionePiazzamento)p;
+			
+			x=element.traduci(ap.x, varMap);
+			y=element.traduci(ap.y, varMap);
+			/*if(ap.x instanceof intVar)
+				x=((intVar)ap.x).val;	
+			else if(ap.x instanceof strVar)
+				x=(varMap.get(ap.x)).intValue();	
+			if(ap.y instanceof strVar)
+				y=((intVar)ap.y).val;
+			else if(ap.y instanceof strVar)
+				y=(varMap.get(ap.y)).intValue();*/	
+			
+			switch(ap.type){
+				case MURO:	mappa[x][y]= SokoPieces.wall;
+							break;
+				case GOAL:	mappa[x][y]= SokoPieces.goal;
+							break;
+				case BOX:	mappa[x][y]= SokoPieces.occupied;
+							break;
+				case SOKOBAN:	mappa[x][y]= SokoPieces.me;
+							break;
+			}
+		:}|
 		sezioneIF {:System.out.println("corpo__"); :}/*|
 		error {: parser.report_error("corpo errore",null); :}*/;
 
@@ -114,7 +142,7 @@ termine	::=	ID:id1 segno:s ID:id2
 			{:
 				RESULT=new Condizione(id1,id2,s);
 			:}|
-		ID segno INT 
+			ID:id1 segno:s INT:id2 
 			{:
 				RESULT=new Condizione(id1,id2,s);
 			:};
@@ -122,6 +150,8 @@ termine	::=	ID:id1 segno:s ID:id2
 segno	::=	UGUALEUGUALE:s {: RESULT=s; :}|
 		MAGUG :s {: RESULT=s; :}|
 		MINUG :s {: RESULT=s; :}|
+		MAG :s {: RESULT=s; :}|
+		MIN :s {: RESULT=s; :}|
 		DIVERSO :s {: RESULT=s; :};
 		
 avanzamento ::=	ID INCR |
@@ -183,9 +213,11 @@ coordinata ::=	INT:t {: RESULT=t; :} |
 		ID:t {: RESULT=t; :};
 
 
-sezioneIF ::= IF TO termine TC contenuto END IF PV 
+sezioneIF ::= IF TO termine:t TC contenuto:c END IF PV 
 				{:
-					
+					if( ((Condizione)c).valute(varMap) ){
+						;
+					}
 					
 				:}/*|
 				IF error {: parser.report_error("sezione if errore",null); :}*/;

@@ -64,6 +64,8 @@ import source.TipoCondizione;
 //espressioni, variabili
 	ugualeuguale = "=="
 	uguale	= "="
+	min	= "<"
+	mag	= ">"
 	minug	= "<="
 	magug	= ">="
 	diverso = "!="
@@ -98,6 +100,8 @@ import source.TipoCondizione;
 
 	{ugualeuguale} {/*System.out.println("ugualeugulae");*/ return new Symbol(SokoParserSym.UGUALEUGUALE, TipoCondizione.UGUALEUGUALE);}
 	{uguale}	{/*System.out.println("uguale");*/ return new Symbol(SokoParserSym.UGUALE, TipoCondizione.UGUALE);}
+	{min}		{/*System.out.println("min");*/ return new Symbol(SokoParserSym.MIN, TipoCondizione.MIN);}
+	{mag}		{/*System.out.println("mag");*/ return new Symbol(SokoParserSym.MAG, TipoCondizione.MAG);}
 	{minug}		{/*System.out.println("minug");*/ return new Symbol(SokoParserSym.MINUG, TipoCondizione.MINUG);}
 	{magug}		{/*System.out.println("magug");*/ return new Symbol(SokoParserSym.MAGUG, TipoCondizione.MAGUG);}
 	{increm}	{/*System.out.println("increm");*/ return new Symbol(SokoParserSym.INCR);}

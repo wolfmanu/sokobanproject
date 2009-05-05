@@ -1,21 +1,8 @@
 package source;
 
+import java.util.Map;
+
 public class Condizione {
-	
-	interface element{}
-	
-	class intVar implements element{
-		int x;
-		intVar(Object o){
-			x=(Integer)o;
-		}
-	}
-	class strVar implements element{
-		String x;
-		strVar(Object o){
-			x=(String)o;
-		}
-	}
 	
 	element el1, el2;
 	TipoCondizione cond;
@@ -26,10 +13,31 @@ public class Condizione {
 		else if(o1 instanceof String)
 			el1=new strVar(o1);	
 		if(o2 instanceof Integer)
-			el1=new intVar(o2);	
+			el2=new intVar(o2);	
 		else if(o2 instanceof String)
-			el1=new strVar(o2);	
+			el2=new strVar(o2);	
 		cond=(TipoCondizione)c;
-	}
+ 	}
 	
+	public boolean valute(Map<String, Integer> varMap){
+		/*UGUALEUGUALE ,
+		MAGUG ,
+		MINUG ,
+		DIVERSO */
+		int x=0, y=0;
+		
+		x=element.traduci(el1, varMap);
+		y=element.traduci(el2, varMap);
+		
+		switch(cond){
+			case UGUALEUGUALE:	return (x==y);
+			case MAGUG:	return (x>=y);
+			case MINUG:	return (x<=y);
+			case MAG:	return (x>y);
+			case MIN:	return (x<y);
+			case DIVERSO:	return (x!=y);
+		}
+		
+		
+	}
 }
