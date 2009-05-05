@@ -15,6 +15,7 @@ import source.Condizione;
 import source.intVar;
 import source.strVar;
 import source.element;
+import source.Azione;
 
 parser code
 {:
