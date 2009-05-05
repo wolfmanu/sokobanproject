@@ -4,6 +4,8 @@ import java.util.*;
 
 import java_cup.runtime.*;
 import source.SokoPieces.*;
+import source.AzioneFor;
+import source.AzioneIf;
 import source.AzionePiazzamento;
 import source.SokoPieces;
 import source.ListaAzioni;
@@ -201,9 +203,10 @@ tipo ::=	MOB:t {: RESULT = t; :} |
 		GOAL:t {: RESULT = t; :} | 
 		SOKO:t {: RESULT = t; :} ;
 		
-coppia ::=	coordinata:t1 VIR coordinata:t2{: 
-											RESULT=new AzionePiazzamento(t1,t2);
-											 :} /*|
+coppia ::=	coordinata:t1 VIR coordinata:t2
+			{: 
+				RESULT=new AzionePiazzamento(t1,t2);
+			:} /*|
 			coordinata error 
 		 			{: parser.report_fatal_error("coppia errore",null); :}|
 			error coordinata 
@@ -215,8 +218,21 @@ coordinata ::=	INT:t {: RESULT=t; :} |
 
 sezioneIF ::= IF TO termine:t TC contenuto:c END IF PV 
 				{:
-					if( ((Condizione)c).valute(varMap) ){
-						;
+					ArrayList<Azione> azlist=((ListaAzioni)c).getActions();
+					if( ((Condizione)t).valute(varMap) ){
+						Iterator<Azione> it=azlist.iterator();
+						while(it.hasNext()){
+							Azione az = it.next();
+							if ( az instanceof AzioneFor){
+								;
+							}
+							if ( az instanceof AzioneIf){
+								;
+							}
+							if ( az instanceof AzionePiazzamento){
+								;
+							}
+						}
 					}
 					
 				:}/*|

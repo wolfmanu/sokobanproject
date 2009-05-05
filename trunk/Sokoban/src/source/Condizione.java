@@ -20,10 +20,7 @@ public class Condizione {
  	}
 	
 	public boolean valute(Map<String, Integer> varMap){
-		/*UGUALEUGUALE ,
-		MAGUG ,
-		MINUG ,
-		DIVERSO */
+
 		int x=0, y=0;
 		
 		x=element.traduci(el1, varMap);
@@ -37,7 +34,6 @@ public class Condizione {
 			case MIN:	return (x<y);
 			case DIVERSO:	return (x!=y);
 		}
-		
-		
+		return false;
 	}
 }

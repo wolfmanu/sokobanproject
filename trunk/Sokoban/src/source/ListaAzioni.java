@@ -17,4 +17,8 @@ public class ListaAzioni {
 	public void AddAzione(Object az){
 		actions.add((Azione)az);
 	}
+	
+	public ArrayList<Azione> getActions(){
+		return actions;
+	}
 }
