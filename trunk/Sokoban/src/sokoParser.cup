@@ -18,6 +18,7 @@ import source.element;
 import source.Azione;
 import source.MapAndResult;
 import source.Result;
+import source.Assegnazione;
 
 
 parser code
@@ -129,43 +130,22 @@ corpo 	::=	cicloFor {:System.out.println("corpo__"); :}|
 cicloFor ::=	FOR TO assegnazione:as PV termine:t PV avanzamento:av TC contenuto:c END FOR PV 
 				{:
 					AzioneFor azione=new AzioneFor();
-					azione
+					azione.var=((Assegnazione)as).id1;
+					azione.start=element.traduci(((Assegnazione)as).id2, varMap);
+					azione.cond=(Condizione)t;
+					azione.incremento=(Boolean)av;
+					azione.la=(ListaAzioni)c;
+					RESULT = azione;
 				:}/*|
 				FOR error {: parser.report_error("for errore",null); :}*/;
 				
 assegnazione::=	ID:id1 UGUALE ID:id2 
 				{:
-					Integer val;
-					if(!varMap.containsKey((String)id1)){
-						parser.report_error(Result.UndefinedVariable.name(),null);
-						SemanticErrorNumber++;
-						error=true;
-					}
-					if(!varMap.containsKey((String)id2)){
-						parser.report_error(Result.UndefinedVariable.name(),null);
-						SemanticErrorNumber++;
-						error=true;
-					}
-					else
-						val=varMap.get((String)id2);
-					
-					if(!error)
-						varMap.put((String)id1, val);
-					error=false;
+					RESULT=new Assegnazione(id1, id2);
 				:} |
 				ID:id1 UGUALE INT:id2
 				{:
-					Integer val;
-					if(!varMap.containsKey((String)id1)){
-						parser.report_error(Result.UndefinedVariable.name(),null);
-						SemanticErrorNumber++;
-						error=true;
-					}
-					val=(Integer)id2;
-					
-					if(!error)
-						varMap.put((String)id1, val);
-					error=false;
+					RESULT=new Assegnazione(id1, id2);
 				:};
 
 termine	::=	ID:id1 segno:s ID:id2
