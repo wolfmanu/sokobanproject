@@ -4,8 +4,8 @@ import java.util.Map;
 
 public class Condizione {
 	
-	element el1, el2;
-	TipoCondizione cond;
+	public element el1, el2;
+	public TipoCondizione cond;
 	
 	public Condizione(Object o1, Object o2, Object c){
 		if(o1 instanceof Integer)
