@@ -16,6 +16,9 @@ import source.intVar;
 import source.strVar;
 import source.element;
 import source.Azione;
+import source.MapAndResult;
+import source.Result;
+
 
 parser code
 {:
@@ -53,6 +56,8 @@ action code
 	
 	SokoPieces[][] mappa=null;
 	
+	int SemanticErrorNumber=0;
+	boolean error=false;
 	//ArrayList<ListaAzioni> listaAzioniTot=new ArrayList<ListaAzioni>();
 
 :}
@@ -107,102 +112,146 @@ part	::=	corpo |
 corpo 	::=	cicloFor {:System.out.println("corpo__"); :}|
 		piazzamento:p 
 		{: 
-			int x=0, y=0;
 			AzionePiazzamento ap=(AzionePiazzamento)p;
-			
-			x=element.traduci(ap.x, varMap);
-			y=element.traduci(ap.y, varMap);
-			/*if(ap.x instanceof intVar)
-				x=((intVar)ap.x).val;	
-			else if(ap.x instanceof strVar)
-				x=(varMap.get(ap.x)).intValue();	
-			if(ap.y instanceof strVar)
-				y=((intVar)ap.y).val;
-			else if(ap.y instanceof strVar)
-				y=(varMap.get(ap.y)).intValue();*/	
-			
-			switch(ap.type){
-				case MURO:	mappa[x][y]= SokoPieces.wall;
-							break;
-				case GOAL:	mappa[x][y]= SokoPieces.goal;
-							break;
-				case BOX:	mappa[x][y]= SokoPieces.occupied;
-							break;
-				case SOKOBAN:	mappa[x][y]= SokoPieces.me;
-							break;
+			MapAndResult mar=ap.eseguiAzione(varMap, mappa);
+			if (mar.result!=Result.OK){
+				parser.report_error(mar.result.name(),null);
+				SemanticErrorNumber++;
+				error=true;
 			}
+			if(!error)
+				mappa=mar.mappa;
+			error=false;
 		:}|
 		sezioneIF {:System.out.println("corpo__"); :}/*|
 		error {: parser.report_error("corpo errore",null); :}*/;
 
-cicloFor ::=	FOR TO assegnazione PV termine PV avanzamento TC contenuto END FOR PV  {:System.out.println("cicloFor"); :}/*|
+cicloFor ::=	FOR TO assegnazione:as PV termine:t PV avanzamento:av TC contenuto:c END FOR PV 
+				{:
+					AzioneFor azione=new AzioneFor();
+					azione
+				:}/*|
 				FOR error {: parser.report_error("for errore",null); :}*/;
 				
-assegnazione::=	ID UGUALE ID |
-		ID UGUALE INT ;
+assegnazione::=	ID:id1 UGUALE ID:id2 
+				{:
+					Integer val;
+					if(!varMap.containsKey((String)id1)){
+						parser.report_error(Result.UndefinedVariable.name(),null);
+						SemanticErrorNumber++;
+						error=true;
+					}
+					if(!varMap.containsKey((String)id2)){
+						parser.report_error(Result.UndefinedVariable.name(),null);
+						SemanticErrorNumber++;
+						error=true;
+					}
+					else
+						val=varMap.get((String)id2);
+					
+					if(!error)
+						varMap.put((String)id1, val);
+					error=false;
+				:} |
+				ID:id1 UGUALE INT:id2
+				{:
+					Integer val;
+					if(!varMap.containsKey((String)id1)){
+						parser.report_error(Result.UndefinedVariable.name(),null);
+						SemanticErrorNumber++;
+						error=true;
+					}
+					val=(Integer)id2;
+					
+					if(!error)
+						varMap.put((String)id1, val);
+					error=false;
+				:};
 
 termine	::=	ID:id1 segno:s ID:id2
 			{:
-				RESULT=new Condizione(id1,id2,s);
+				if(!varMap.containsKey((String)id1)){
+					parser.report_error(Result.UndefinedVariable.name(),null);
+					SemanticErrorNumber++;
+					error=true;
+				}
+				if(!varMap.containsKey((String)id2)){
+					parser.report_error(Result.UndefinedVariable.name(),null);
+					SemanticErrorNumber++;
+					error=true;
+				}
+				if(!error)
+					RESULT=new Condizione(id1,id2,s);
+				error=false;
+				RESULT=null;
 			:}|
 			ID:id1 segno:s INT:id2 
 			{:
-				RESULT=new Condizione(id1,id2,s);
+				if(!varMap.containsKey((String)id1)){
+					parser.report_error(Result.UndefinedVariable.name(),null);
+					SemanticErrorNumber++;
+					error=true;
+				}
+				if(!error)
+					RESULT=new Condizione(id1,id2,s);
+				error=false;
+				RESULT=null;
 			:};
 
 segno	::=	UGUALEUGUALE:s {: RESULT=s; :}|
-		MAGUG :s {: RESULT=s; :}|
-		MINUG :s {: RESULT=s; :}|
-		MAG :s {: RESULT=s; :}|
-		MIN :s {: RESULT=s; :}|
-		DIVERSO :s {: RESULT=s; :};
+			MAGUG :s {: RESULT=s; :}|
+			MINUG :s {: RESULT=s; :}|
+			MAG :s {: RESULT=s; :}|
+			MIN :s {: RESULT=s; :}|
+			DIVERSO :s {: RESULT=s; :};
 		
-avanzamento ::=	ID INCR |
-		ID DECR ;  		/*possibile ampliamento con espressioni matematiche */
+avanzamento ::=	ID INCR {: RESULT=new Boolean(true); :}|
+				ID DECR {: RESULT=new Boolean(false); :};  		
 
 contenuto ::=	piazzamento:p /*creo lista azioni */
-			{:
-				RESULT=new ListaAzioni(p);
-			:}	| 
-		cicloFor:f /*creo lista azioni */
-		{:
-			RESULT=new ListaAzioni(f);
-		:}	|
-		sezioneIF :i /*creo lista azioni */
-		{:
-			RESULT=new ListaAzioni(i);
-		:}	|
-		contenuto:c piazzamento:p /*aggiungo a lista azioni */
-		{:
-			((ListaAzioni)c).AddAzione(p);
-			RESULT=c;
-		:}	|
-		contenuto:c sezioneIF:i /*aggiungo a lista azioni */
-		{:
-			((ListaAzioni)c).AddAzione(i);
-			RESULT=c;
-		:}	|
-		contenuto:c cicloFor:f /*aggiungo a lista azioni */
-		{:
-			((ListaAzioni)c).AddAzione(f);
-			RESULT=c;
-		:}	
-		/*|
-		error {: parser.report_error("contenuto errore",null); :}|
-		contenuto error {: parser.report_error("contenuto errore",null); :}*/;
+				{:
+					RESULT=new ListaAzioni(p);
+				:}	| 
+				cicloFor:f /*creo lista azioni */
+				{:
+					RESULT=new ListaAzioni(f);
+				:}	|
+				sezioneIF :i /*creo lista azioni */
+				{:
+					RESULT=new ListaAzioni(i);
+				:}	|
+				contenuto:c piazzamento:p /*aggiungo a lista azioni */
+				{:
+					((ListaAzioni)c).AddAzione(p);
+					RESULT=c;
+				:}	|
+				contenuto:c sezioneIF:i /*aggiungo a lista azioni */
+				{:
+					((ListaAzioni)c).AddAzione(i);
+					RESULT=c;
+				:}	|
+				contenuto:c cicloFor:f /*aggiungo a lista azioni */
+				{:
+					((ListaAzioni)c).AddAzione(f);
+					RESULT=c;
+				:}	
+			/*|
+			error {: parser.report_error("contenuto errore",null); :}|
+			contenuto error {: parser.report_error("contenuto errore",null); :}*/;
 
-piazzamento ::=	tipo:t1 TO coppia:cp TC PV  {:
-							((AzionePiazzamento)cp).setType(t1);
-							RESULT=cp;
-	:} /*| 
+piazzamento ::=	tipo:t1 TO coppia:cp TC PV 
+				{:
+					((AzionePiazzamento)cp).setType(t1);
+					RESULT=cp;
+				:} /*| 
 				tipo TO coppia TC error {: parser.report_error("piazzamento errore",null); :}|
 				tipo error {: parser.report_error("piazzamento errore",null); :}|
 				tipo TO error TC PV {: parser.report_error("piazzamento errore",null); :}*/
 				;
 tipo ::=	MOB:t {: RESULT = t; :} |
-		FISSI:t {: RESULT = t; :} |
-		GOAL:t {: RESULT = t; :} | 
-		SOKO:t {: RESULT = t; :} ;
+			FISSI:t {: RESULT = t; :} |
+			GOAL:t {: RESULT = t; :} | 
+			SOKO:t {: RESULT = t; :} ;
 		
 coppia ::=	coordinata:t1 VIR coordinata:t2
 			{: 
@@ -219,23 +268,30 @@ coordinata ::=	INT:t {: RESULT=t; :} |
 
 sezioneIF ::= IF TO termine:t TC contenuto:c END IF PV 
 				{:
-					ArrayList<Azione> azlist=((ListaAzioni)c).getActions();
-					if( ((Condizione)t).valute(varMap) ){
-						Iterator<Azione> it=azlist.iterator();
-						while(it.hasNext()){
-							Azione az = it.next();
-							if ( az instanceof AzioneFor){
-								;
-							}
-							if ( az instanceof AzioneIf){
-								;
-							}
-							if ( az instanceof AzionePiazzamento){
-								;
+					if(t!=null){
+						ArrayList<Azione> azlist=((ListaAzioni)c).getActions();
+						if( ((Condizione)t).valute(varMap) ){
+							Iterator<Azione> it=azlist.iterator();
+							while(it.hasNext()){
+								Azione az = it.next();
+								if ( az instanceof AzioneFor){
+									;
+								}
+								if ( az instanceof AzioneIf){
+									;
+								}
+								if ( az instanceof AzionePiazzamento){
+									AzionePiazzamento ap=(AzionePiazzamento)az;
+									MapAndResult mar=ap.eseguiAzione(varMap, mappa);
+									if (mar.result!=Result.OK){
+										parser.report_error(mar.result.name(),null);
+										SemanticErrorNumber++;
+									}
+									mappa=mar.mappa;
+								}
 							}
 						}
 					}
-					
 				:}/*|
 				IF error {: parser.report_error("sezione if errore",null); :}*/;
 

@@ -2,8 +2,8 @@ package source;
 
 public class AzioneIf implements Azione{
 
-	String var;
-	Integer val;
+	element e1;
+	element e2;
 	Boolean cond;
 	
 }

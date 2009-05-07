@@ -2,9 +2,9 @@ package source;
 
 public class AzioneFor implements Azione{
 
-	String var;
-	Integer start, end;
-	Condizione cond;
-	Boolean incremento;
+	public String var;
+	public Integer start;
+	public Condizione cond;
+	public Boolean incremento;
 	
 }
