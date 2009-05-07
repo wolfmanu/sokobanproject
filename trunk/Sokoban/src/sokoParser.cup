@@ -218,7 +218,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 			/*|
 			error {: parser.report_error("contenuto errore",null); :}|
 			contenuto error {: parser.report_error("contenuto errore",null); :}*/;
-
+			
 piazzamento ::=	tipo:t1 TO coppia:cp TC PV 
 				{:
 					((AzionePiazzamento)cp).setType(t1);
@@ -238,9 +238,9 @@ coppia ::=	coordinata:t1 VIR coordinata:t2
 				RESULT=new AzionePiazzamento(t1,t2);
 			:} /*|
 			coordinata error 
-		 			{: parser.report_fatal_error("coppia errore",null); :}|
+		 			{: parser.report_error("coppia errore",null); :}|
 			error coordinata 
-					{: parser.report_fatal_error("coppia errore",null); :}*/;
+					{: parser.report_error("coppia errore",null); :}*/;
 					
 coordinata ::=	INT:t {: RESULT=t; :} |
 		ID:t {: RESULT=t; :};
