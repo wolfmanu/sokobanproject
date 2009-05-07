@@ -6,5 +6,6 @@ public class AzioneFor implements Azione{
 	public Integer start;
 	public Condizione cond;
 	public Boolean incremento;
+	public ListaAzioni la;
 	
 }
