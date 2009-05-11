@@ -25,12 +25,14 @@ public class AzionePiazzamento implements Azione{
 			this.type=(TipoPiazzamento)t;
 		}
 		
-		public MapAndResult eseguiAzione(Map<String, Integer> varMap, SokoPieces[][] mappa){
+		public MapAndResult executeAction(Map<String, Integer> varMap, SokoPieces[][] mappa){
 			int x=0, y=0;
 			MapAndResult mar=new MapAndResult();
 			
 			x=element.traduci(this.x, varMap);
 			y=element.traduci(this.y, varMap);
+			
+			/**/System.out.println(type.name()+"("+x+","+y+")");
 			
 			if ( x>mappa.length || y > mappa[0].length)
 				mar.result=Result.IndexOutOfBound;
@@ -49,6 +51,5 @@ public class AzionePiazzamento implements Azione{
 			mar.result=Result.OK;
 			mar.mappa=mappa;
 			return mar;
-		}
-		
+		}		
 }
