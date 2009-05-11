@@ -34,8 +34,10 @@ public class AzionePiazzamento implements Azione{
 			
 			/**/System.out.println(type.name()+"("+x+","+y+")");
 			
-			if ( x>mappa.length || y > mappa[0].length)
+			if ( x>mappa.length || y > mappa[0].length){
 				mar.result=Result.IndexOutOfBound;
+				return mar;
+			}
 			
 			switch(type){
 				case MURO:	mappa[x][y]= SokoPieces.wall;

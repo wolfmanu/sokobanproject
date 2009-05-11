@@ -100,24 +100,24 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 					if (a!= null && l!=null){
 						int h=((Integer)a).intValue()+1;
 						int w=((Integer)l).intValue()+1;
-						mappa=new SokoPieces[h][w];
-						for(int k=0;k<h;k++)
-							for(int j=0;j<w;j++)
+						mappa=new SokoPieces[w][h];
+						for(int k=0;k<w;k++)
+							for(int j=0;j<h;j++)
 								mappa[k][j]=SokoPieces.floor;
 					}
 					else{
 						parser.report_error("Errore dichiarazione dimensioni",null);
 						error=true;
 					}
-				:}|
+				:}| 
 				DIM larghezza:l VIR altezza:a PV 
 				{:
 					if (a!= null && l!=null){
 						int h=((Integer)a).intValue()+1;
 						int w=((Integer)l).intValue()+1;
-						mappa=new SokoPieces[h][w];
-						for(int k=0;k<h;k++)
-							for(int j=0;j<w;j++)
+						mappa=new SokoPieces[w][h];
+						for(int k=0;k<w;k++)
+							for(int j=0;j<h;j++)
 								mappa[k][j]=SokoPieces.floor;
 					}
 					else{
@@ -175,6 +175,7 @@ def	::=	def VIR definizione |
 definizione ::= ID:i UGUALE INT:n  
 				{: 
 					varMap.put((String)i, (Integer)n);
+					System.out.println((String)i +(Integer)n);
 				:}|
 				ID:i1 UGUALE ID:i2 
 				{:
@@ -182,10 +183,12 @@ definizione ::= ID:i UGUALE INT:n
 						varMap.put((String)i1, varMap.get((String)i2) );
 					else
 						error=true;
+					System.out.println((String)i1 + (String)i2);
 				:}|
 				ID :i
 				{:
 					varMap.put((String)i, null);
+					System.out.println((String)i + "null\n");
 				:};
 
 part	::=	corpo |
