@@ -236,6 +236,7 @@ corpo 	::=	cicloFor :f
 					MapAndResult mar=ai.executeAction(varMap, mappa);
 					if (mar.result!=Result.OK){
 						parser.report_error(mar.result.name(),null);
+						/**/System.out.println("errore if");
 						SemanticErrorNumber++;
 						RESULT=null;
 					}
