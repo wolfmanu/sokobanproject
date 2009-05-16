@@ -1,12 +1,8 @@
 package source;
 
-
 import java.lang.*;
 import java.awt.*;
 import java.applet.*;
-
-import source.SokoPieces.*;
-
 
 public class Sokoban extends Applet {
 
@@ -308,12 +304,25 @@ public class Sokoban extends Applet {
 	
 	};
 	
-	
+	final static String images[]= {	"wall.jpg",
+									"sokoban.gif",
+									"ball.gif",
+									"goal.gif"
+									};		//manca soko_goal, occupato, 
+	final static char wall = '#';
+	final static char floor = ' ';
+	final static char me = '@';
+	final static char megoal = '&';
+	final static char occupied = '*';
+	final static char dollar = '$'; //ball
+	final static char cr = 'M';
+	final static char blank = '^';
+	final static char goal = '.';
 	Image tiles[] = new Image[128];
 	
 	AudioClip buzz, wow;
 	
-	SokoPieces[] level;
+	char[] level;
 	int currlevel, w, h, push, move;
 	int lastcount, pos1, pos2, pos3;
 	Rectangle lastrect;
@@ -327,19 +336,65 @@ public class Sokoban extends Applet {
 	Font fontb = new Font("Helvetica", Font.BOLD, 12);
 	
 	public void init() {
-		buzz = getAudioClip(getDocumentBase(), "buzz.au");
-		wow = getAudioClip(getDocumentBase(), "wow.au");
+		//buzz = getAudioClip(getDocumentBase(), "buzz.au");
+		//wow = getAudioClip(getDocumentBase(), "wow.au");
 		MediaTracker tracker = new MediaTracker(this);
-		Image j = getImage(getDocumentBase(), "sokoban.gif");
-		tracker.addImage(j,0);
-		try { tracker.waitForAll(); } catch (InterruptedException e) {}
-		String tile = "# @$.&*";
-		for (int i = 0; i < tile.length(); i++) {
-			tiles[(int) tile.charAt(i)] = createImage(16, 16);
-			Graphics g = tiles[(int) tile.charAt(i)].getGraphics();
-			g.drawImage(j, -i*16, 0, this);
-		}
-		j.flush();
+		Image img=null;
+		
+		//String tile = "# @$.&*";
+		String tile = "#@$.";
+		Graphics g;int i = 1;
+		//for (int i = 0; i < tile.length(); i++) {
+			img= getImage(getDocumentBase(), "../img/"+images[i]);
+			tracker.addImage(img,0);
+			try { 
+				tracker.waitForAll(); 
+			} catch (InterruptedException e) {}
+			tiles[(int) tile.charAt(i)] = createImage(32, 32);
+			g = tiles[(int) tile.charAt(i)].getGraphics();
+			g.drawImage(img, -i*32, 0, this);
+			img.flush();
+			i=0;
+			img= getImage(getDocumentBase(), "../img/"+images[i]);
+			tracker.addImage(img,1);
+			try { 
+				tracker.waitForAll(); 
+			} catch (InterruptedException e) {}
+			tiles[(int) tile.charAt(i)] = createImage(32, 32);
+			g = tiles[(int) tile.charAt(i)].getGraphics();
+			g.drawImage(img, -i*32, 0, this);
+		//}
+		img.flush();
+		/*	Image j = getImage(getDocumentBase(),"../img/"+images[0]);
+			tracker.addImage(j,0);
+			try { tracker.waitForAll(); } catch (InterruptedException e) {}
+			String tile = "#@$.";
+			//for (int i = 0; i < tile.length(); i++) {
+				tiles[(int) tile.charAt(0)] = createImage(32, 32);
+				Graphics g = tiles[(int) tile.charAt(0)].getGraphics();
+				g.drawImage(j, -0*32, 0, this);
+			//}
+			
+			j = getImage(getDocumentBase(),"../img/"+images[1]);
+			tracker.addImage(j,0);
+			try { tracker.waitForAll(); } catch (InterruptedException e) {}
+			
+			//for (int i = 0; i < tile.length(); i++) {
+				tiles[(int) tile.charAt(1)] = createImage(32, 32);
+				g = tiles[(int) tile.charAt(1)].getGraphics();
+				g.drawImage(j, -1*32, 0, this);
+			//}
+			
+			j = getImage(getDocumentBase(),"../img/"+images[2]);
+			tracker.addImage(j,0);
+			try { tracker.waitForAll(); } catch (InterruptedException e) {}
+			
+			//for (int i = 0; i < tile.length(); i++) {
+				tiles[(int) tile.charAt(2)] = createImage(32, 32);
+				g = tiles[(int) tile.charAt(2)].getGraphics();
+				g.drawImage(j, -2*32, 0, this);
+			//}
+			j.flush();*/
 		newLevel(0);
 		requestFocus();
 	}
@@ -355,38 +410,39 @@ public class Sokoban extends Applet {
 	}
 	
 	public synchronized void update(Graphics g) {
-		Dimension d = size();
+		Dimension d = getSize();
 		if (d.width * d.height == 0) return; // supposedly this can happen!
-		Rectangle r = g.getClipRect();
+		Rectangle r = g.getClipBounds();
 
 		if (r.x < 72) { // only do this if necessary!
 			g.setColor(Color.lightGray);
 			g.fillRect(0, 0, d.width, d.height);
 			g.setFont(fontb);
 			g.setColor(Color.blue);
-			g.drawString("Sokoban",0,16);
+			g.drawString("Sokoban",0,32);
 			g.setFont(font);
 			g.setColor(Color.black);
 			String help[] = { "h=Left", "j=Down", "k=Up", "l=Right", " (or Arrows)",
 				"H,J,K,L=", " FastMove", "u=Undo", "A=Restart", "S=Save", "R=Restore",
 				"+=UpLevel", "-=DownLevel" };
 			for (int i = 0; i < help.length; i++)
-				g.drawString(help[i], 0, 80 + 16 * i);
+				g.drawString(help[i], 0, 80 + 32 * i);
 			g.setFont(fontb);
-			g.drawString("Level:", 0, 32);
-			g.drawString("Move:", 0, 48);
-			g.drawString("Push:", 0, 64);
+			g.drawString("Level:", 0, 64);
+			g.drawString("Move:", 0, 96);
+			g.drawString("Push:", 0, 128);
 			drawStatus(g);
 		}
 
-		int y = -16 + h, x = -16 + w;
+		int y = -32 + h, x = -32 + w;
 		for (int i = 0; i < level.length; i++)
-			if (level[i] == SokoPieces.cr) {
-				x = -16 + w; y += 16;
+			if (level[i] == cr) {
+				x = -32 + w; y += 32;
 			} else {
-				x += 16;
+				x += 32;
 				if (level[i] == blank) continue;
-				if (r.inside(x,y)) // only draw the images necessary for move!
+				boolean inside = r.contains(x,y);
+				if (inside) // only draw the images necessary for move!
 					g.drawImage(tiles[(int) level[i]], x, y, this);
 			}
 	}
@@ -439,8 +495,8 @@ public class Sokoban extends Applet {
 			if (level[i] == cr)
 				{ if (W > w) w = W; W = 0; h++; }
 			else W++;
-		Dimension d = size();
-		w = 72 + (d.width - 72 - 16 * w) / 2; h = (d.height - 16 * h) / 2;
+		Dimension d = getSize();
+		w = 72 + (d.width - 72 - 32 * w) / 2; h = (d.height - 32 * h) / 2;
 	}
 	
 	public void restoreGame() {
