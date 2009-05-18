@@ -350,34 +350,27 @@ public class Sokoban extends Applet {
 		//String tile = "# @$.&*";
 		String tile = "#@$.";
 		//Graphics g;
-		int i = 1;
+		//int i = 0;
 		//for (int i = 0; i < tile.length(); i++) {
 		//TODO Applet cannot return code base if it does not have an AppletStub. Only AppletStub has information about code base. So you should imlement your own AppletStub and set it for your Applet. For this a special method Applet.setStub(AppletStub stub) exists.
 		Image j=null;
 		
-		j = getImage(getDocumentBase(),"../img/"+images[i]);
+		j = getImage(getDocumentBase(),"../img/"+images[0]);
 		
+	
 		tracker.addImage(j,0);
 		try { tracker.waitForAll(); } catch (InterruptedException e) {}
 			//String tile = "#@$.";
-			//for (int i = 0; i < tile.length(); i++) {
-			tiles[(int) tile.charAt(i)] = createImage(16, 16);
+			for (int i = 1; i < tile.length(); i++) {
+				
+				tiles[(int) tile.charAt(i)] = createImage(16, 16);
 				Graphics g = tiles[(int) tile.charAt(i)].getGraphics();
 				g.drawImage(j, -i*16, 0, this);
-				j.flush();
-			//}
-			i=0;
-		j = getImage(getDocumentBase(),"../img/"+images[i]);
-		tracker.addImage(j,1);
-		try { tracker.waitForAll(); } catch (InterruptedException e) {}
-			//String tile = "#@$.";
-			//for (int i = 0; i < tile.length(); i++) {
-			tiles[(int) tile.charAt(i)] = createImage(16, 16);
-			 g = tiles[(int) tile.charAt(i)].getGraphics();
-				g.drawImage(j, -i*16, 0, this);
-			//}
+			}
 					
-				j.flush();
+		j.flush();
+			
+	
 			newLevel(0);
 			requestFocus();
 		}
