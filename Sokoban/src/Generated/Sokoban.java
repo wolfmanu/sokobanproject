@@ -1,8 +1,14 @@
-package source;
+package Generated;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.*;
+import java.net.URL;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.applet.*;
+
+import javax.imageio.ImageIO;
 
 public class Sokoban extends Applet {
 
@@ -318,7 +324,7 @@ public class Sokoban extends Applet {
 	final static char cr = 'M';
 	final static char blank = '^';
 	final static char goal = '.';
-	Image tiles[] = new Image[128];
+	BufferedImage tiles[] = new BufferedImage[128];
 	
 	AudioClip buzz, wow;
 	
@@ -339,28 +345,40 @@ public class Sokoban extends Applet {
 		//buzz = getAudioClip(getDocumentBase(), "buzz.au");
 		//wow = getAudioClip(getDocumentBase(), "wow.au");
 		MediaTracker tracker = new MediaTracker(this);
-		Image img=null;
+		//Image img=null;
 		
 		//String tile = "# @$.&*";
 		String tile = "#@$.";
-		Graphics g;int i = 1;
+		Graphics g;
+		int i = 1;
 		//for (int i = 0; i < tile.length(); i++) {
-			img= getImage(getDocumentBase(), "../img/"+images[i]);
+		//TODO Applet cannot return code base if it does not have an AppletStub. Only AppletStub has information about code base. So you should imlement your own AppletStub and set it for your Applet. For this a special method Applet.setStub(AppletStub stub) exists.
+
+			//img= getImage(getCodeBase(), "../img/"+images[i]);
+			
+		BufferedImage img = null;
+		try {
+		    img = ImageIO.read(new File("../img/"+images[i]));
+		} catch (IOException e) {
+		}
+
+		
 			tracker.addImage(img,0);
 			try { 
 				tracker.waitForAll(); 
 			} catch (InterruptedException e) {}
-			tiles[(int) tile.charAt(i)] = createImage(32, 32);
-			g = tiles[(int) tile.charAt(i)].getGraphics();
+			//tiles[(int) tile.charAt(i)] = createImage(32, 32);
+			int v=(int) tile.charAt(i);
+			g = tiles[v].getGraphics();
 			g.drawImage(img, -i*32, 0, this);
 			img.flush();
 			i=0;
-			img= getImage(getDocumentBase(), "../img/"+images[i]);
+			//img= getImage(getCodeBase(), "../img/"+images[i]);
 			tracker.addImage(img,1);
 			try { 
 				tracker.waitForAll(); 
 			} catch (InterruptedException e) {}
-			tiles[(int) tile.charAt(i)] = createImage(32, 32);
+			//tiles[(int) tile.charAt(i)] = createImage(32, 32);
 			g = tiles[(int) tile.charAt(i)].getGraphics();
 			g.drawImage(img, -i*32, 0, this);
 		//}

@@ -17,8 +17,11 @@ for(x=1;x<=height;x++)
    #F(width,x);
 end for;
 
-if(x==1)
-   #F(x,1);
+//if(x!=1)
+//	#F(5,5);
+//end if;
+
+if(x==1)   
    for(x=1;x<=width;x++)
       #F(x,height);
    end for;
