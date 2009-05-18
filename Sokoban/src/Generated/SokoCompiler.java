@@ -4,6 +4,8 @@ import java.io.*;
 
 import javax.swing.JFrame;
 
+import source.Sokoban;
+
 
 
 public class SokoCompiler
