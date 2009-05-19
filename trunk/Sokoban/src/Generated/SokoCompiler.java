@@ -16,15 +16,17 @@ public class SokoCompiler
     static public void main(String argv[])
     {
     try {
-       /* // Istanzio lo scanner aprendo il file di ingresso argv[0]
+        // Istanzio lo scanner aprendo il file di ingresso argv[0]
         Lexer l = new Lexer(new FileReader("Maps/mappa.map"));
         // Istanzio il parser
         SokoParserCup p = new SokoParserCup(l);
         // Avvio il parser
-        Object result = p.parse();*/
-    	sokoapplet =new Sokoban();
+        Object result = p.parse();
+        
+        
+    	sokoapplet =new Sokoban(p.getMap());
     	sokoframe = new JFrame(); 
-    	sokoframe.setTitle("Pagina Studente");
+    	sokoframe.setTitle("Sokoban");
     	sokoframe.getContentPane().add(sokoapplet, BorderLayout.CENTER); 
 
 		sokoapplet.init(); 

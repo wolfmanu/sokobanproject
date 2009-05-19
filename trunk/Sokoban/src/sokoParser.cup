@@ -8,7 +8,7 @@ import source.AzioneFor;
 import source.AzioneIf;
 import source.AzionePiazzamento;
 import source.SokoPieces;
-import source.ListaAzioni;
+import source.ListaAzioni; 
 import source.TipoPiazzamento;
 import source.TipoCondizione;
 import source.Condizione;
@@ -23,6 +23,8 @@ import source.Assegnazione;
 
 parser code
 {:
+	SokoPieces[][] mappa=null;
+
 	public static int syntax_error = 0;
 	public static int semantic_error = 0;
 
@@ -49,19 +51,25 @@ parser code
 		report_error(message, info);
 		System.exit(1);
 	}
+	public SokoPieces[][] getMap(){
+		return mappa;
+	}
+	
 :}
 
 action code
 {:
 	Map<String, Integer> varMap = new HashMap<String, Integer>();
 	
-	SokoPieces[][] mappa=null;
+	
 	
 	int SemanticErrorNumber=0;
 	boolean error=false;
 	int blocchiMobili=0;		//TODO controllo non superamento
 	
 	//ArrayList<ListaAzioni> listaAzioniTot=new ArrayList<ListaAzioni>();
+
+	
 
 :}
 
@@ -100,10 +108,10 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 					if (a!= null && l!=null){
 						int h=((Integer)a).intValue()+1;
 						int w=((Integer)l).intValue()+1;
-						mappa=new SokoPieces[w][h];
+						parser.mappa=new SokoPieces[w][h];
 						for(int k=0;k<w;k++)
 							for(int j=0;j<h;j++)
-								mappa[k][j]=SokoPieces.floor;
+								parser.mappa[k][j]=SokoPieces.floor;
 					}
 					else{
 						parser.report_error("Errore dichiarazione dimensioni",null);
@@ -115,10 +123,10 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 					if (a!= null && l!=null){
 						int h=((Integer)a).intValue()+1;
 						int w=((Integer)l).intValue()+1;
-						mappa=new SokoPieces[w][h];
+						parser.mappa=new SokoPieces[w][h];
 						for(int k=0;k<w;k++)
 							for(int j=0;j<h;j++)
-								mappa[k][j]=SokoPieces.floor;
+								parser.mappa[k][j]=SokoPieces.floor;
 					}
 					else{
 						parser.report_error("Errore dichiarazione dimensioni",null);
@@ -200,14 +208,14 @@ part	::=	corpo |
 corpo 	::=	cicloFor :f
 			{:
 				if (f!=null){
-					MapAndResult mar=((AzioneFor)f).executeAction(varMap, mappa);
+					MapAndResult mar=((AzioneFor)f).executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
 						parser.report_error(mar.result.name(),null);
 						SemanticErrorNumber++;
 						RESULT=null;
 					}
 					else{
-						mappa=mar.mappa;
+						parser.mappa=mar.mappa;
 						RESULT=1;
 					}
 				}
@@ -217,14 +225,14 @@ corpo 	::=	cicloFor :f
 			{: 
 				if(p!=null){
 					AzionePiazzamento ap=(AzionePiazzamento)p;
-					MapAndResult mar=ap.executeAction(varMap, mappa);
+					MapAndResult mar=ap.executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
 						parser.report_error(mar.result.name(),null);
 						SemanticErrorNumber++;
 						RESULT=null;
 					}
 					else{
-						mappa=mar.mappa;
+						parser.mappa=mar.mappa;
 						RESULT=1;
 					}
 				}
@@ -233,7 +241,7 @@ corpo 	::=	cicloFor :f
 			{:
 				if(si!=null){
 					AzioneIf ai=(AzioneIf)si;
-					MapAndResult mar=ai.executeAction(varMap, mappa);
+					MapAndResult mar=ai.executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
 						parser.report_error(mar.result.name(),null);
 						/**/System.out.println("errore if");
@@ -241,7 +249,7 @@ corpo 	::=	cicloFor :f
 						RESULT=null;
 					}
 					else{
-						mappa=mar.mappa;
+						parser.mappa=mar.mappa;
 						RESULT=1;
 					}
 				}
