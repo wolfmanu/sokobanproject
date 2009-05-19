@@ -3,12 +3,14 @@ package source;
 import java.io.File;
 import java.io.IOException;
 import java.lang.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.applet.*;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class Sokoban extends Applet {
 
@@ -310,7 +312,7 @@ public class Sokoban extends Applet {
 	
 	};*/
 	
-	SokoPieces levels[][] = { 
+	SokoPieces levels[] /*= { 
 							{//SokoPieces.cr,
 							//SokoPieces.blank, 
 							SokoPieces.wall, 
@@ -331,7 +333,7 @@ public class Sokoban extends Applet {
 							SokoPieces.me,
 							SokoPieces.goal,
 							SokoPieces.goal}
-							};
+							}*/;
 			
 	
 	final static String images[]= {	"muro_16.gif",
@@ -350,7 +352,7 @@ public class Sokoban extends Applet {
 	final static char goal = '.';*/
 	Image tiles[] = new Image[9];
 	
-	AudioClip buzz, wow;
+	//AudioClip buzz, wow;
 	
 	SokoPieces levelS[];
 	//char[] level;
@@ -366,6 +368,24 @@ public class Sokoban extends Applet {
 	Font font = new Font("Helvetica", Font.PLAIN, 12);
 	Font fontb = new Font("Helvetica", Font.BOLD, 12);
 	
+	public Sokoban(SokoPieces[][] mappa){
+		levels=convertMap(mappa);
+	}
+	
+	
+	private SokoPieces[] convertMap(SokoPieces[][] mappa) {
+		SokoPieces[] newMap=new SokoPieces[(mappa.length+1)*(mappa[0].length+1)];
+		
+		for(int i=0, w=0; i<mappa.length; i++){
+			for(int j=0; j<mappa[i].length; j++, w++)
+				newMap[w]=mappa[i][j];
+			newMap[w]=SokoPieces.cr;
+			w++;
+			}
+		return newMap;
+	}
+
+
 	public void init() {
 		
 		//buzz = getAudioClip(getDocumentBase(), "buzz.au");
@@ -382,11 +402,24 @@ public class Sokoban extends Applet {
 		
 		//for (int i = 0; i < tile.length(); i++) {
 		Image j=null;
-		
-		
+		URL url=null;
+		/*try {
+			String resource1 = images[0];
+			// safest to use context class loader
+			//url = Thread.currentThread().setContextClassLoader().getResource(resource1);
+
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}*/
 			//String tile = "#@$.";
 			for (int i = 0; i < tile.length; i++) {
-				j = getImage(getDocumentBase(),"../img/"+images[i]);
+				//j = getImage(getCodeBase(),"../img/"+images[i]);
+				File f=new File("img/"+images[i]);
+				//if(!f.exists()) System.out.println("err");
+				ImageIcon ji = new ImageIcon("img/"+images[i]);
+				System.out.println(ji);
+				j=ji.getImage();
+					System.out.println(j);
 				tracker.addImage(j,i);
 				try { tracker.waitForAll(); } catch (InterruptedException e) {}
 				tiles[tile[i].ordinal()] =j;
@@ -452,8 +485,10 @@ public class Sokoban extends Applet {
 				} else {
 					x += 16;
 					if (levelS[i] == SokoPieces.blank) continue;
-					if (r.contains(x,y)) // only draw the images necessary for move!
-						g.drawImage(tiles[levelS[i].ordinal()], x, y, this);
+					if (r.contains(x,y)) {// only draw the images necessary for move!
+						int k=levelS[i].ordinal();
+						g.drawImage(tiles[k], x, y, this);
+					}
 				}
 		}
 		
@@ -485,9 +520,9 @@ public class Sokoban extends Applet {
 				case 'J': uc = true;
 				case 'j': case Event.DOWN: movearound(0, 1); break;
 				case '+':
-				case '-': currlevel += e.key == '+' ? 1 : -1;
+				/*case '-': currlevel += e.key == '+' ? 1 : -1;
 							if (currlevel < 0) currlevel = 0;
-							else if (currlevel == levels.length) currlevel = levels.length - 1;
+							else if (currlevel == levels.length) currlevel = levels.length - 1;*/
 				case 'A': newLevel(currlevel); repaint(); break;
 				case 'u': undomove(); break;
 				case 'S': saveGame(); break;
@@ -498,7 +533,8 @@ public class Sokoban extends Applet {
 		
 		public void newLevel(int l) {
 			currlevel = l; push = 0; move = 0;
-			w = 0; h = 0; levelS = levels[currlevel];
+			//w = 0; h = 0; levelS = levels[currlevel];
+			w = 0; h = 0; levelS = levels;
 			lastcount = 0;
 			int W = 0;
 			for (int i = 0; i < levelS.length; i++)
@@ -564,14 +600,14 @@ public class Sokoban extends Applet {
 					boolean b = true;
 					for (int i = 0; i < levelS.length; i++) if (levelS[i] == SokoPieces.dollar) b = false;
 					if (b) {
-						wow.play();
+						//wow.play();
 						try { Thread.sleep(2000); } catch (InterruptedException e) {};
 						newLevel(currlevel + 1);
 						repaint();
 					}
 				} else {
 					pos1 = savepos1; pos2 = savepos2; pos3 = savepos3;
-					buzz.play();
+					//buzz.play();
 				}
 			} while (uc);
 		}

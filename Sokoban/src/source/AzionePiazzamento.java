@@ -44,7 +44,7 @@ public class AzionePiazzamento implements Azione{
 							break;
 				case GOAL:	mappa[x][y]= SokoPieces.goal;
 							break;
-				case BOX:	mappa[x][y]= SokoPieces.occupied;
+				case BOX:	mappa[x][y]= SokoPieces.dollar;
 							break;
 				case SOKOBAN:	mappa[x][y]= SokoPieces.me;
 							break;
