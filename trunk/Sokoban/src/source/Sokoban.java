@@ -315,6 +315,17 @@ public class Sokoban extends Applet {
 							//SokoPieces.blank, 
 							SokoPieces.wall, 
 							SokoPieces.wall,
+							SokoPieces.cr,
+							SokoPieces.wall,
+							SokoPieces.me,
+							SokoPieces.cr,
+							SokoPieces.goal,
+							SokoPieces.goal},
+							
+							{//SokoPieces.cr,
+							//SokoPieces.blank, 
+							SokoPieces.wall, 
+							SokoPieces.wall,
 							//SokoPieces.cr,
 							SokoPieces.wall,
 							SokoPieces.me,
@@ -337,7 +348,7 @@ public class Sokoban extends Applet {
 	final static char cr = 'M';
 	final static char blank = '^';
 	final static char goal = '.';*/
-	Image tiles[] = new Image[128];
+	Image tiles[] = new Image[9];
 	
 	AudioClip buzz, wow;
 	
@@ -368,44 +379,25 @@ public class Sokoban extends Applet {
 							SokoPieces.dollar,
 							SokoPieces.goal};
 		//Graphics g;
-		int i = 0;
+		
 		//for (int i = 0; i < tile.length(); i++) {
-		//TODO Applet cannot return code base if it does not have an AppletStub. Only AppletStub has information about code base. So you should imlement your own AppletStub and set it for your Applet. For this a special method Applet.setStub(AppletStub stub) exists.
 		Image j=null;
 		
-		j = getImage(getDocumentBase(),"../img/"+images[i]);
-		tracker.addImage(j,0);
-		try { tracker.waitForAll(); } catch (InterruptedException e) {}
+		
 			//String tile = "#@$.";
-			//for (int i = 0; i < tile.length; i++) {
-				
-				tiles[tile[i].ordinal()] = createImage(16, 16);
-				Graphics g = tiles[tile[i].ordinal()].getGraphics();
-				g.drawImage(j, -i*16, 0, this);
-			//}			
+			for (int i = 0; i < tile.length; i++) {
+				j = getImage(getDocumentBase(),"../img/"+images[i]);
+				tracker.addImage(j,i);
+				try { tracker.waitForAll(); } catch (InterruptedException e) {}
+				tiles[tile[i].ordinal()] =j;
+				//tiles[tile[i].ordinal()] = createImage(16, 16);
+				//Graphics g = tiles[tile[i].ordinal()].getGraphics();
+				//g.drawImage(j, -i*16, 0, this);
+			}			
 		j.flush();
 			
-		i=1;
-		j = getImage(getDocumentBase(),"../img/"+images[i]);
-		tracker.addImage(j,0);
-		try { tracker.waitForAll(); } catch (InterruptedException e) {}
-			//String tile = "#@$.";
-			//for (int i = 0; i < tile.length; i++) {
-				
-				tiles[tile[i].ordinal()] = createImage(16, 16);
-				g = tiles[tile[i].ordinal()].getGraphics();
-				g.drawImage(j, -i*16, 0, this);
-			//}			
-		j.flush();
-	
-		for (int k = 0; k < levels[0].length; k++){
-				//g.drawImage(tiles[levelS[i].ordinal()], x, y, this);
-				System.out.println(levels[0][k].name());
-			}
-		
-		
 			newLevel(0);
-			setSize(800, 600);
+			//setSize(800, 600);
 			requestFocus();
 		}
 		
@@ -417,6 +409,15 @@ public class Sokoban extends Applet {
 			
 		public void paint(Graphics g) {
 			update(g);
+			/*Image j=null, tiles[]=new Image[4];
+			for (int i = 0; i < 4; i++) {
+				j = getImage(getDocumentBase(),"../img/"+images[i]);
+				MediaTracker tracker=new MediaTracker(this);
+				tracker.addImage(j,0);
+				try { tracker.waitForAll(); } catch (InterruptedException e) {}
+				tiles[i]=j;
+				g.drawImage(tiles[i],20+i*16,20,this);
+			}*/
 		}
 		
 		public synchronized void update(Graphics g) {
