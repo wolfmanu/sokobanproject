@@ -339,7 +339,10 @@ public class Sokoban extends Applet {
 	final static String images[]= {	"muro_16.gif",
 									"sokoban_16.gif",
 									"ball_16.gif",
-									"goal_16.gif"
+									"goal_16.gif",
+									"floor.gif",
+									"occupied_16.gif",
+									"megoal_16.gif"
 									};		//manca soko_goal, occupato, 
 	/*final static char wall = '#';
 	final static char floor = ' ';
@@ -374,20 +377,27 @@ public class Sokoban extends Applet {
 	
 	
 	private SokoPieces[] convertMap(SokoPieces[][] mappa) {
-		SokoPieces[] newMap=new SokoPieces[(mappa.length+1)*(mappa[0].length+1)];
 		
-		for(int i=0, w=0; i<mappa.length; i++){
-			for(int j=0; j<mappa[i].length; j++, w++)
-				newMap[w]=mappa[i][j];
-			newMap[w]=SokoPieces.cr;
-			w++;
+		h=(mappa.length);
+		w=(mappa[0].length+1);
+		SokoPieces[] newMap=new SokoPieces[h*w];
+		//System.out.println("creo mappa "+w+"x"+h);
+		for(int i=0, k=0; i<mappa.length; i++){
+			for(int j=0; j<mappa[i].length; j++, k++)
+				newMap[k]=mappa[i][j];
+			newMap[k]=SokoPieces.cr;
+			k++;
 			}
+		
+		/*for(int i=0; i<newMap.length; i++){
+			System.out.println("newMap["+i/w+"]["+i%w+"]"+newMap[i]);
+		}*/
 		return newMap;
 	}
 
 
 	public void init() {
-		
+		setSize(800, 600);
 		//buzz = getAudioClip(getDocumentBase(), "buzz.au");
 		//wow = getAudioClip(getDocumentBase(), "wow.au");
 		MediaTracker tracker = new MediaTracker(this);
@@ -397,7 +407,10 @@ public class Sokoban extends Applet {
 		SokoPieces tile[] ={SokoPieces.wall, 
 							SokoPieces.me,
 							SokoPieces.dollar,
-							SokoPieces.goal};
+							SokoPieces.goal,
+							SokoPieces.floor,
+							SokoPieces.occupied,
+							SokoPieces.megoal};
 		//Graphics g;
 		
 		//for (int i = 0; i < tile.length(); i++) {
@@ -419,7 +432,7 @@ public class Sokoban extends Applet {
 				ImageIcon ji = new ImageIcon("img/"+images[i]);
 				System.out.println(ji);
 				j=ji.getImage();
-					System.out.println(j);
+					//System.out.println(j);
 				tracker.addImage(j,i);
 				try { tracker.waitForAll(); } catch (InterruptedException e) {}
 				tiles[tile[i].ordinal()] =j;
@@ -455,9 +468,10 @@ public class Sokoban extends Applet {
 		
 		public synchronized void update(Graphics g) {
 			Dimension d = getSize();
+			System.out.println("dim="+d);
 			if (d.width * d.height == 0) return; // supposedly this can happen!
 			Rectangle r = g.getClipBounds();
-
+			System.out.println("rect="+r);
 			if (r.x < 72) { // only do this if necessary!
 				g.setColor(Color.lightGray);
 				g.fillRect(0, 0, d.width, d.height);
@@ -477,7 +491,7 @@ public class Sokoban extends Applet {
 				g.drawString("Push:", 0, 64);
 				drawStatus(g);
 			}
-
+			System.out.println("h="+h+"; w="+w);
 			int y = -16 + h, x = -16 + w;
 			for (int i = 0; i < levelS.length; i++)
 				if (levelS[i] == SokoPieces.cr) {
@@ -486,7 +500,9 @@ public class Sokoban extends Applet {
 					x += 16;
 					if (levelS[i] == SokoPieces.blank) continue;
 					if (r.contains(x,y)) {// only draw the images necessary for move!
+						System.out.println("("+x+","+y+")="+levelS[i]);
 						int k=levelS[i].ordinal();
+						
 						g.drawImage(tiles[k], x, y, this);
 					}
 				}
@@ -525,8 +541,8 @@ public class Sokoban extends Applet {
 							else if (currlevel == levels.length) currlevel = levels.length - 1;*/
 				case 'A': newLevel(currlevel); repaint(); break;
 				case 'u': undomove(); break;
-				case 'S': saveGame(); break;
-				case 'R': if (gamesaved) restoreGame(); break;
+				//case 'S': saveGame(); break;
+				//case 'R': if (gamesaved) restoreGame(); break;
 			}
 			return true;
 		}
@@ -534,18 +550,23 @@ public class Sokoban extends Applet {
 		public void newLevel(int l) {
 			currlevel = l; push = 0; move = 0;
 			//w = 0; h = 0; levelS = levels[currlevel];
-			w = 0; h = 0; levelS = levels;
+			w = 0; h = 0; 
+			levelS = levels;
 			lastcount = 0;
 			int W = 0;
 			for (int i = 0; i < levelS.length; i++)
-				if (levelS[i] == SokoPieces.cr)
-					{ if (W > w) w = W; W = 0; h++; }
+				if (levelS[i] == SokoPieces.cr){ 
+					if (W > w) 
+						w = W; 
+					W = 0; 
+					h++; 
+				}
 				else W++;
 			Dimension d = getSize();
 			w = 72 + (d.width - 72 - 16 * w) / 2; h = (d.height - 16 * h) / 2;
 		}
 		
-		public void restoreGame() {
+		/*public void restoreGame() {
 			currlevel = savecurrlevel;
 			w = savew; h = saveh; push = savepush; move = savemove;
 			levelS = savelevelS; gamesaved = false;
@@ -558,7 +579,7 @@ public class Sokoban extends Applet {
 			savelevelS = new SokoPieces[levelS.length];
 			System.arraycopy(levelS ,0, savelevelS, 0, levelS.length);
 			gamesaved = true;
-		}
+		}*/
 		
 		public int	moveone(int pos, int x, int y, int dx, int dy) {
 			int i;

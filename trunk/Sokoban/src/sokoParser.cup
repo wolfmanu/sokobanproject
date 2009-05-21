@@ -106,8 +106,8 @@ dichiar	::=	dimBlocchi numBlocchi |// #Dimensioni h=height, w=width;
 dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV 
 				{:
 					if (a!= null && l!=null){
-						int h=((Integer)a).intValue()+1;
-						int w=((Integer)l).intValue()+1;
+						int h=((Integer)a).intValue();
+						int w=((Integer)l).intValue();
 						parser.mappa=new SokoPieces[w][h];
 						for(int k=0;k<w;k++)
 							for(int j=0;j<h;j++)
