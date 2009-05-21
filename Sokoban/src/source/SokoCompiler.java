@@ -1,10 +1,12 @@
-package Generated;
+package source;
 import java.awt.BorderLayout;
 import java.io.*;
 
 import javax.swing.JFrame;
 
-import source.Sokoban;
+import Generated.Lexer;
+import Generated.SokoParserCup;
+
 
 
 
@@ -26,13 +28,15 @@ public class SokoCompiler
         
     	sokoapplet =new Sokoban(p.getMap());
     	sokoframe = new JFrame(); 
+    	sokoframe.setSize(800,600); 
     	sokoframe.setTitle("Sokoban");
+    	
     	sokoframe.getContentPane().add(sokoapplet, BorderLayout.CENTER); 
-
+    	 
 		sokoapplet.init(); 
 		sokoapplet.start(); 
 		
-		sokoframe.setSize(800,600); 
+		
 		sokoframe.setVisible(true); 
         
         }

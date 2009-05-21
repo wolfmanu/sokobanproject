@@ -1,18 +1,17 @@
+var width = 5, height = 5;
 #BlocchiMobili 5;
-#Dimensioni h=height, w=3;
+#Dimensioni h=height, w=width;
+var x;
 
 
-if(x==1)
-	  #F(x,1);
 	for(x=1;x<=width;x++)
-  	 #F(x,height);
-end for;
-end if;
+  		#F(x,height);
+  		#F(x,1);
+	end for;
 
-for(x=1;x<=width;x++)
-  	 #F(x,height);
-	if(x==1)
-	  #F(x,1);
-	end if;
+
+for(x=1;x<=height;x++)
+  	 #F(width,x);
+	#F(1,x);
 end for;
 

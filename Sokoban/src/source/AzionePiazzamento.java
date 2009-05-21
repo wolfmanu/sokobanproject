@@ -29,8 +29,8 @@ public class AzionePiazzamento implements Azione{
 			int x=0, y=0;
 			MapAndResult mar=new MapAndResult();
 			
-			x=element.traduci(this.x, varMap);
-			y=element.traduci(this.y, varMap);
+			x=element.traduci(this.x, varMap)-1;
+			y=element.traduci(this.y, varMap)-1;
 			
 			/**/System.out.println(type.name()+"("+x+","+y+")");
 			
