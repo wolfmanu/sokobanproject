@@ -1,7 +1,10 @@
 package source;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,7 +13,12 @@ import java.awt.image.BufferedImage;
 import java.applet.*;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 public class Sokoban extends Applet {
 
@@ -356,6 +364,11 @@ public class Sokoban extends Applet {
 	Image tiles[] = new Image[9];
 	
 	//AudioClip buzz, wow;
+	InputStream in1 = null;
+	AudioStream wow=null;
+	InputStream in2 = null;
+	AudioStream doh=null;
+	
 	
 	SokoPieces levelS[];
 	//char[] level;
@@ -398,8 +411,24 @@ public class Sokoban extends Applet {
 
 	public void init() {
 		setSize(800, 600);
-		//buzz = getAudioClip(getDocumentBase(), "buzz.au");
-		//wow = getAudioClip(getDocumentBase(), "wow.au");
+		/************/
+		
+		try {
+			in1 = new FileInputStream("audio/doh.wav");
+			doh = new AudioStream(in1);   
+			in2 = new FileInputStream("audio/woohoo.wav");
+			wow = new AudioStream(in2);   
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+
+		/************/
+		//buzz = getAudioClip(getDocumentBase(), "doh.wav");
+		//wow = getAudioClip(getDocumentBase(), "woohoo.wav");
 		MediaTracker tracker = new MediaTracker(this);
 		
 		
@@ -415,7 +444,7 @@ public class Sokoban extends Applet {
 		
 		//for (int i = 0; i < tile.length(); i++) {
 		Image j=null;
-		URL url=null;
+		//URL url=null;
 		/*try {
 			String resource1 = images[0];
 			// safest to use context class loader
@@ -427,7 +456,7 @@ public class Sokoban extends Applet {
 			//String tile = "#@$.";
 			for (int i = 0; i < tile.length; i++) {
 				//j = getImage(getCodeBase(),"../img/"+images[i]);
-				File f=new File("img/"+images[i]);
+				//File f=new File("img/"+images[i]);
 				//if(!f.exists()) System.out.println("err");
 				ImageIcon ji = new ImageIcon("img/"+images[i]);
 				System.out.println(ji);
@@ -440,7 +469,7 @@ public class Sokoban extends Applet {
 				//Graphics g = tiles[tile[i].ordinal()].getGraphics();
 				//g.drawImage(j, -i*16, 0, this);
 			}			
-		j.flush();
+			j.flush();
 			
 			newLevel(0);
 			//setSize(800, 600);
@@ -622,13 +651,19 @@ public class Sokoban extends Applet {
 					for (int i = 0; i < levelS.length; i++) if (levelS[i] == SokoPieces.dollar) b = false;
 					if (b) {
 						//wow.play();
-						try { Thread.sleep(2000); } catch (InterruptedException e) {};
-						newLevel(currlevel + 1);
-						repaint();
+						AudioPlayer.player.start(wow);
+						AudioPlayer.player.stop(wow); 
+						//try { Thread.sleep(2000); } catch (InterruptedException e) {};
+						//newLevel(currlevel + 1);
+						//repaint();
+						ImageIcon im=new ImageIcon("img/cup.png");
+						JOptionPane.showMessageDialog(this, "Complimenti hai vinto!",
+													"Vittoria!", JOptionPane.PLAIN_MESSAGE, im);
 					}
 				} else {
 					pos1 = savepos1; pos2 = savepos2; pos3 = savepos3;
-					//buzz.play();
+					AudioPlayer.player.start(doh);
+					AudioPlayer.player.stop(doh); 
 				}
 			} while (uc);
 		}
