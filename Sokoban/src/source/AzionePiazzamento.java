@@ -26,27 +26,80 @@ public class AzionePiazzamento implements Azione{
 		}
 		
 		public MapAndResult executeAction(Map<String, Integer> varMap, SokoPieces[][] mappa){
-			int x=0, y=0;
+			int x=0, y=0,xTmp, yTmp;
 			MapAndResult mar=new MapAndResult();
 			
-			x=element.traduci(this.x, varMap)-1;
-			y=element.traduci(this.y, varMap)-1;
-			
-			/**/System.out.println(type.name()+"("+x+","+y+")");
-			
-			if ( x>mappa.length || y > mappa[0].length){
-				mar.result=Result.IndexOutOfBound;
+			xTmp=element.traduci(this.x, varMap);
+			yTmp=element.traduci(this.y, varMap);
+			if(xTmp==-1 ){
+				mar.result=Result.UndefinedVariable;
+				mar.setErrMsg("Undefined variable "+((strVar)this.x).x);
 				return mar;
 			}
+			if(yTmp==-1 ){
+				mar.result=Result.UndefinedVariable;
+				mar.setErrMsg("Undefined variable "+((strVar)this.y).x);
+				return mar;
+			}
+			x=xTmp-1;
+			y=yTmp-1;
+			/**/System.out.println(type.name()+"("+x+","+y+")");
 			
+			if ( x>mappa.length || y > mappa[0].length || x<0 || y<0){
+				mar.result=Result.IndexOutOfBound;
+				mar.setErrMsg("Index out of bound at", type, x, y);
+				return mar;
+			}
+			/*if ( mappa[x][y]!=SokoPieces.floor){
+				mar.result=Result.Overriding;
+				mar.setErrMsg("Overriding at", type, x, y);
+				return mar;
+			}*/
 			switch(type){
-				case MURO:	mappa[x][y]= SokoPieces.wall;
+				case MURO:	if ( mappa[x][y]!=SokoPieces.wall && mappa[x][y]!=SokoPieces.floor){
+								mar.result=Result.Overriding;
+								mar.setErrMsg("Overriding at", type, x, y);
+								return mar;
+							}
+							mappa[x][y]= SokoPieces.wall;
 							break;
-				case GOAL:	mappa[x][y]= SokoPieces.goal;
+				case GOAL:	if ( mappa[x][y]==SokoPieces.dollar){ //permetto sovrapposizione
+								mappa[x][y]= SokoPieces.occupied;
+								break;
+							} 
+							if ( mappa[x][y]==SokoPieces.me){ //permetto sovrapposizione
+								mappa[x][y]= SokoPieces.megoal;
+								break;
+							}
+							if ( mappa[x][y]!=SokoPieces.goal && mappa[x][y]!=SokoPieces.floor ){
+								mar.result=Result.Overriding;
+								mar.setErrMsg("Overriding at", type, x, y);
+								return mar;
+							}
+							mappa[x][y]= SokoPieces.goal;
 							break;
-				case BOX:	mappa[x][y]= SokoPieces.dollar;
+				case BOX:	if ( mappa[x][y]==SokoPieces.goal){ //permetto sovrapposizione
+								mappa[x][y]= SokoPieces.occupied;
+								break;
+							}
+							if ( mappa[x][y]!=SokoPieces.dollar && mappa[x][y]!=SokoPieces.floor ){
+								mar.result=Result.Overriding;
+								mar.setErrMsg("Overriding at", type, x, y);
+								return mar;
+							}
+							mappa[x][y]= SokoPieces.dollar;
 							break;
-				case SOKOBAN:	mappa[x][y]= SokoPieces.me;
+				case SOKOBAN:	
+							if ( mappa[x][y]==SokoPieces.goal){ //permetto sovrapposizione
+								mappa[x][y]= SokoPieces.megoal;
+								break;
+							}
+							if (mappa[x][y]!=SokoPieces.floor ){
+								mar.result=Result.Overriding;
+								mar.setErrMsg("Overriding at", type, x, y);
+								return mar;
+							}
+							mappa[x][y]= SokoPieces.me;
 							break;
 				default:	mar.result=Result.TypeError;;
 			}
