@@ -22,7 +22,6 @@ public class Condizione {
 	public boolean valute(Map<String, Integer> varMap){
 
 		int x=0, y=0;
-		
 		x=element.traduci(el1, varMap);
 		y=element.traduci(el2, varMap);
 		

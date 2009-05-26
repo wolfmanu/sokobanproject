@@ -25,21 +25,23 @@ public class SokoCompiler
         // Avvio il parser
         Object result = p.parse();
         
-        
-    	sokoapplet =new Sokoban(p.getMap());
-    	sokoframe = new JFrame(); 
-    	sokoframe.setSize(800,600); 
-    	sokoframe.setTitle("Sokoban");
-    	
-    	sokoframe.getContentPane().add(sokoapplet, BorderLayout.CENTER); 
-    	 
-		sokoapplet.init(); 
-		sokoapplet.start(); 
-		
-		
-		sokoframe.setVisible(true); 
-        
+        if(!p.HasError()){
+	    	sokoapplet =new Sokoban(p.getMap());
+	    	sokoframe = new JFrame(); 
+	    	sokoframe.setSize(800,600); 
+	    	sokoframe.setTitle("Sokoban");
+	    	
+	    	sokoframe.getContentPane().add(sokoapplet, BorderLayout.CENTER); 
+	    	 
+			sokoapplet.init(); 
+			sokoapplet.start(); 
+			
+			
+			sokoframe.setVisible(true); 
         }
+        else
+        	System.err.println("Errore");
+    }
     catch (Exception e) {
         e.printStackTrace();
         }

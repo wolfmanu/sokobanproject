@@ -351,7 +351,7 @@ public class Sokoban extends Applet {
 									"floor.gif",
 									"occupied_16.gif",
 									"megoal_16.gif"
-									};		//manca soko_goal, occupato, 
+									};		
 	/*final static char wall = '#';
 	final static char floor = ' ';
 	final static char me = '@';
@@ -459,7 +459,7 @@ public class Sokoban extends Applet {
 				//File f=new File("img/"+images[i]);
 				//if(!f.exists()) System.out.println("err");
 				ImageIcon ji = new ImageIcon("img/"+images[i]);
-				System.out.println(ji);
+				//System.out.println(ji);
 				j=ji.getImage();
 					//System.out.println(j);
 				tracker.addImage(j,i);
@@ -497,10 +497,10 @@ public class Sokoban extends Applet {
 		
 		public synchronized void update(Graphics g) {
 			Dimension d = getSize();
-			System.out.println("dim="+d);
+			//System.out.println("dim="+d);
 			if (d.width * d.height == 0) return; // supposedly this can happen!
 			Rectangle r = g.getClipBounds();
-			System.out.println("rect="+r);
+			//System.out.println("rect="+r);
 			if (r.x < 72) { // only do this if necessary!
 				g.setColor(Color.lightGray);
 				g.fillRect(0, 0, d.width, d.height);
@@ -529,7 +529,7 @@ public class Sokoban extends Applet {
 					x += 16;
 					if (levelS[i] == SokoPieces.blank) continue;
 					if (r.contains(x,y)) {// only draw the images necessary for move!
-						System.out.println("("+x+","+y+")="+levelS[i]);
+						//System.out.println("("+x+","+y+")="+levelS[i]);
 						int k=levelS[i].ordinal();
 						
 						g.drawImage(tiles[k], x, y, this);

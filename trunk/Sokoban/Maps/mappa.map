@@ -1,11 +1,11 @@
-var width = 10, height = 5;
-var x;
+var width = 10, height = 10,x;
 
+//var x;
 
 #Dimensioni h=height, w=width;
 #BlocchiMobili 5;
 
-var y = 3;
+var y=4;
 
 // delimitazione della mappa con i muri perimetrali
 for(x=1;x<=width;x++)

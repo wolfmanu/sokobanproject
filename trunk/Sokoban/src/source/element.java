@@ -12,6 +12,7 @@ public abstract class element {
 				return (varMap.get(((strVar)e).x)).intValue();
 			}
 		}
+		System.err.println("valueting error");
 		return -1;
 	}
 }
