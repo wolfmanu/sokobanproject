@@ -6,6 +6,7 @@ public enum Result {
 	IndexOutOfBound, 
 	TypeError, 
 	UndefinedVariable,
-	Overriding;
+	Overriding,
+	NotInitialized;
 	
 }

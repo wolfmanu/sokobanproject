@@ -41,6 +41,16 @@ public class AzionePiazzamento implements Azione{
 				mar.setErrMsg("Undefined variable "+((strVar)this.y).x);
 				return mar;
 			}
+			if(xTmp==-2 ){
+				mar.result=Result.NotInitialized;
+				mar.setErrMsg("Not initialized variable "+((strVar)this.x).x);
+				return mar;
+			}
+			if(yTmp==-2 ){
+				mar.result=Result.NotInitialized;
+				mar.setErrMsg("Not initialized variable "+((strVar)this.y).x);
+				return mar;
+			}
 			x=xTmp-1;
 			y=yTmp-1;
 			/**/System.out.println(type.name()+"("+x+","+y+")");

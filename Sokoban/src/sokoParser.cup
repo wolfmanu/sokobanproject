@@ -20,7 +20,7 @@ import source.MapAndResult;
 import source.Result;
 import source.Assegnazione;
 
-
+ 
 parser code
 {:
 	SokoPieces[][] mappa=null;
@@ -80,7 +80,7 @@ action code
 
 terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE,UGUALEUGUALE, MINUG, MAGUG,MIN, MAG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
 
-non terminal 	map, part, def, elemento, altezza, larghezza, corpo, definizioni,  definizione, dichiar, numBlocchi, dimBlocchi,
+non terminal 	myID,map, part, def, elemento, altezza, larghezza, corpo, definizioni,  definizione, dichiar, numBlocchi, dimBlocchi,
 		cicloFor, contenuto, assegnazione, termine, segno, avanzamento, piazzamento, tipo, coppia, coordinata, sezioneIF;
 
 start with map;
@@ -112,6 +112,8 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 					if (a!= null && l!=null){
 						int h=((Integer)a).intValue();
 						int w=((Integer)l).intValue();
+						varMap.put(new String("h"), (Integer)a);
+						varMap.put(new String("w"), (Integer)l);
 						parser.mappa=new SokoPieces[w][h];
 						for(int k=0;k<w;k++)
 							for(int j=0;j<h;j++)
@@ -125,8 +127,10 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 				DIM larghezza:l VIR altezza:a PV 
 				{:
 					if (a!= null && l!=null){
-						int h=((Integer)a).intValue()+1;
-						int w=((Integer)l).intValue()+1;
+						int h=((Integer)a).intValue();
+						int w=((Integer)l).intValue();
+						varMap.put(new String("h"), (Integer)a);
+						varMap.put(new String("w"), (Integer)l);
 						parser.mappa=new SokoPieces[w][h];
 						for(int k=0;k<w;k++)
 							for(int j=0;j<h;j++)
@@ -196,7 +200,8 @@ definizione ::= ID:i UGUALE INT:n
 					
 
 				:}|
-				ID:i1 UGUALE ID:i2 
+				//ID:i1 UGUALE ID:i2 
+				ID:i1 UGUALE myID:i2 
 				{:
 					System.out.println((String)i1+"="+(String)i2);
 					if (varMap.containsKey((String)i1)){
@@ -312,8 +317,13 @@ cicloFor ::=	FOR TO assegnazione:as PV termine:t PV avanzamento:av TC contenuto:
 					}
 				:}/*|
 				FOR error {: parser.report_error("for errore",null); :}*/;
-				
-assegnazione::=	ID:id1 UGUALE ID:id2 
+
+myID ::= ID:id {: RESULT=id; :} |
+		WIDTH:id {: RESULT=id; :} |
+		HEIGHT:id {: RESULT=id; :};
+		
+//assegnazione::=	ID:id1 UGUALE ID:id2 
+assegnazione::=	ID:id1 UGUALE myID:id2 
 				{:
 					if (!varMap.containsKey(id1)){
 						parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
@@ -340,7 +350,8 @@ assegnazione::=	ID:id1 UGUALE ID:id2
 						
 				:};
 
-termine	::=	ID:id1 segno:s ID:id2
+termine	::=	ID:id1 segno:s myID:id2
+//termine	::=	ID:id1 segno:s ID:id2
 			{:
 				if(!varMap.containsKey((String)id1)){
 					parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
@@ -473,7 +484,8 @@ coppia ::=	coordinata:t1 VIR coordinata:t2
 					{: parser.report_error("coppia errore",null); :}*/;
 					
 coordinata ::=	INT:t {: RESULT=t; :} |
-				ID:t 
+				//ID:t
+				myID:t
 				{: 
 					//if(varMap.containsKey((String)t) && varMap.get((String)t)!=null)
 						RESULT=t;
