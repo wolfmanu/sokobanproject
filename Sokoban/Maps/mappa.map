@@ -5,7 +5,7 @@ var width = 10, height = 10,x;
 #Dimensioni h=height, w=width;
 #BlocchiMobili 5;
 
-var y=4;
+var y=7;
 
 // delimitazione della mappa con i muri perimetrali
 for(x=1;x<=width;x++)
@@ -36,7 +36,7 @@ end for;
 
 // posizionamento dei blocchi mobili
 #M(3,4);
-#M(y,y);
+#M(y,4);
 
 // posizionamento degli obiettivi
 #G(2,3);
@@ -45,10 +45,10 @@ end for;
 // posizionamento del sokoban
 #S(2,2);
 
-//#M(9,9);
-//#M(6,4);
+#M(9,9);
+#M(6,4);
 #G(5,5);
 #M(4,4);
-//#G(6,6);
-//#G(7,7);
+#G(6,6);
+#G(7,7);
 
