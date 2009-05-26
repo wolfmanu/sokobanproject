@@ -28,6 +28,7 @@ parser code
 	public static int syntax_error = 0;
 	public static int semantic_error = 0;
 	boolean error=false;
+	public int blocchiMobili=0;
 
 	public void syntax_error(Symbol sym) {
 		StringBuffer m = new StringBuffer("Syntax Error");
@@ -69,8 +70,7 @@ action code
 	
 	int SemanticErrorNumber=0;
 	
-	int blocchiMobili=0;		//TODO controllo non superamento
-	
+			
 	//ArrayList<ListaAzioni> listaAzioniTot=new ArrayList<ListaAzioni>();
 
 	
@@ -157,13 +157,13 @@ larghezza ::=	WIDTH UGUALE INT:i
 				WIDTH UGUALE ID:i 
 				{:
 					if(varMap.containsKey((String)i) && varMap.get((String)i)!=null)
-						RESULT=varMap.get((String)i);
+				 		RESULT=varMap.get((String)i);
 					else
 						RESULT = null;
 				:};
 		
 
-numBlocchi ::=	NMOB INT:i PV {: blocchiMobili=((Integer)i).intValue(); :} ;
+numBlocchi ::=	NMOB INT:i PV {: parser.blocchiMobili=((Integer)i).intValue(); :} ;
 
 definizioni ::=	elemento |
 				definizioni elemento /* |
