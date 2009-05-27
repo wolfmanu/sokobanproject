@@ -8,6 +8,8 @@ public abstract class element {
 		if(e instanceof intVar)
 			return ((intVar)e).val;	
 		else if(e instanceof strVar){
+			if(!varMap.containsKey(((strVar)e).x))
+				return -1;
 			if(varMap.get(((strVar)e).x)==null)
 				return -2;
 			if(varMap.containsKey(((strVar)e).x) && varMap.get(((strVar)e).x)!=null){
