@@ -96,29 +96,34 @@ public class SokoCompiler
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {}
-		if(me!=1){
+		if(me<1){
+			msg.setText("Too fiew sokoban defined");
+			//System.err.println("Too many sokoban defined");
+			err=true;
+		}
+		if(me>1){
 			msg.setText("Too many sokoban defined");
-			System.err.println("Too many sokoban defined");
+			//System.err.println("Too many sokoban defined");
 			err=true;
 		}
 		if(goal<p.blocchiMobili){
 			msg.setText("Too fiew goal defined");
-			System.err.println("Too fiew goal defined");
+			//System.err.println("Too fiew goal defined");
 			err=true;
 		}
 		if(goal>p.blocchiMobili){
 			msg.setText("Too may goal defined");
-			System.err.println("Too may goal defined");
+			//System.err.println("Too may goal defined");
 			err=true;
 		}
 		if(box<p.blocchiMobili){
 			msg.setText("Too fiew box defined");
-			System.err.println("Too fiew box defined "+box+ goal);
+			//System.err.println("Too fiew box defined "+box+ goal);
 			err=true;
 		}
 		if(box>p.blocchiMobili){
 			msg.setText("Too may box defined");
-			System.err.println("Too may box defined");
+			//System.err.println("Too may box defined");
 			err=true;
 		}
 		if(err){

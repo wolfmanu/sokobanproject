@@ -33,12 +33,12 @@ public class AzionePiazzamento implements Azione{
 			yTmp=element.traduci(this.y, varMap);
 			if(xTmp==-1 ){
 				mar.result=Result.UndefinedVariable;
-				mar.setErrMsg("Undefined variable "+((strVar)this.x).x);
+				mar.setErrMsg("Undefined_variable "+((strVar)this.x).x);
 				return mar;
 			}
 			if(yTmp==-1 ){
 				mar.result=Result.UndefinedVariable;
-				mar.setErrMsg("Undefined variable "+((strVar)this.y).x);
+				mar.setErrMsg("Undefined_variable "+((strVar)this.y).x);
 				return mar;
 			}
 			if(xTmp==-2 ){

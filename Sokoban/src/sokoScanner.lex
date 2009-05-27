@@ -86,8 +86,8 @@ import source.TipoCondizione;
 
 <YYINITIAL> {
 	{var}		{/*System.out.println("var");*/ return new Symbol(SokoParserSym.VAR);}
-	{height}	{/*System.out.println("height");*/ return new Symbol(SokoParserSym.HEIGHT);}
-	{width}		{/*System.out.println("width");*/ return new Symbol(SokoParserSym.WIDTH);}
+	{height}	{/*System.out.println("height");*/ return new Symbol(SokoParserSym.HEIGHT,new String(yytext()));}
+	{width}		{/*System.out.println("width");*/ return new Symbol(SokoParserSym.WIDTH,new String(yytext()));}
 	{for}		{/*System.out.println("for");*/ return new Symbol(SokoParserSym.FOR);}
 	{if}		{/*System.out.println("if");*/ return new Symbol(SokoParserSym.IF);}
 	{end}		{/*System.out.println("end");*/ return new Symbol(SokoParserSym.END);}

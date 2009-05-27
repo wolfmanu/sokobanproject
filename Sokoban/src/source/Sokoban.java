@@ -520,7 +520,7 @@ public class Sokoban extends Applet {
 				g.drawString("Push:", 0, 64);
 				drawStatus(g);
 			}
-			System.out.println("h="+h+"; w="+w);
+			//System.out.println("h="+h+"; w="+w);
 			int y = -16 + h, x = -16 + w;
 			for (int i = 0; i < levelS.length; i++)
 				if (levelS[i] == SokoPieces.cr) {
