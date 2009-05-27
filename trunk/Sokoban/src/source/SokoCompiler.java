@@ -25,7 +25,7 @@ public class SokoCompiler
     {
     try {
         // Istanzio lo scanner aprendo il file di ingresso argv[0]
-        Lexer l = new Lexer(new FileReader("Maps/mappa.map"));
+        Lexer l = new Lexer(new FileReader("Maps/mappa1.map"));
         // Istanzio il parser
         p = new SokoParserCup(l);
         // Avvio il parser
@@ -112,7 +112,7 @@ public class SokoCompiler
 			err=true;
 		}
 		if(goal>p.blocchiMobili){
-			msg.setText("Too may goal defined");
+			msg.setText("Too many goal defined");
 			//System.err.println("Too may goal defined");
 			err=true;
 		}
@@ -122,7 +122,7 @@ public class SokoCompiler
 			err=true;
 		}
 		if(box>p.blocchiMobili){
-			msg.setText("Too may box defined");
+			msg.setText("Too many box defined");
 			//System.err.println("Too may box defined");
 			err=true;
 		}
