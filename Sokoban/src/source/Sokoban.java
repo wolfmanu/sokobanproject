@@ -529,7 +529,7 @@ public class Sokoban extends Applet {
 					x += 16;
 					if (levelS[i] == SokoPieces.blank) continue;
 					if (r.contains(x,y)) {// only draw the images necessary for move!
-						//System.out.println("("+x+","+y+")="+levelS[i]);
+						System.out.println("("+x/16+","+y/16+")="+levelS[i]);
 						int k=levelS[i].ordinal();
 						
 						g.drawImage(tiles[k], x, y, this);

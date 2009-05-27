@@ -51,24 +51,20 @@ public class AzionePiazzamento implements Azione{
 				mar.setErrMsg("Not initialized variable "+((strVar)this.y).x);
 				return mar;
 			}
-			x=xTmp-1;
-			y=yTmp-1;
-			/**/System.out.println(type.name()+"("+x+","+y+")");
 			
-			if ( x>mappa.length || y > mappa[0].length || x<0 || y<0){
+			/**/System.out.println(type.name()+"("+(xTmp-1)+","+(yTmp-1)+")");
+			
+			if ( xTmp>mappa.length || yTmp > mappa[0].length || xTmp<1 || yTmp<1){
 				mar.result=Result.IndexOutOfBound;
-				mar.setErrMsg("Index out of bound at", type, x, y);
+				mar.setErrMsg("Index out of bound at", type, xTmp, yTmp);
 				return mar;
 			}
-			/*if ( mappa[x][y]!=SokoPieces.floor){
-				mar.result=Result.Overriding;
-				mar.setErrMsg("Overriding at", type, x, y);
-				return mar;
-			}*/
+			x=xTmp-1;
+			y=yTmp-1;
 			switch(type){
 				case MURO:	if ( mappa[x][y]!=SokoPieces.wall && mappa[x][y]!=SokoPieces.floor){
 								mar.result=Result.Overriding;
-								mar.setErrMsg("Overriding at", type, x, y);
+								mar.setErrMsg("Overriding "+ mappa[x][y]+" at", type, x, y);
 								return mar;
 							}
 							mappa[x][y]= SokoPieces.wall;
@@ -83,7 +79,7 @@ public class AzionePiazzamento implements Azione{
 							}
 							if ( mappa[x][y]!=SokoPieces.goal && mappa[x][y]!=SokoPieces.floor ){
 								mar.result=Result.Overriding;
-								mar.setErrMsg("Overriding at", type, x, y);
+								mar.setErrMsg("Overriding "+ mappa[x][y]+" at", type, x, y);
 								return mar;
 							}
 							mappa[x][y]= SokoPieces.goal;
@@ -94,7 +90,7 @@ public class AzionePiazzamento implements Azione{
 							}
 							if ( mappa[x][y]!=SokoPieces.dollar && mappa[x][y]!=SokoPieces.floor ){
 								mar.result=Result.Overriding;
-								mar.setErrMsg("Overriding at", type, x, y);
+								mar.setErrMsg("Overriding "+ mappa[x][y]+" at", type, x, y);
 								return mar;
 							}
 							mappa[x][y]= SokoPieces.dollar;
@@ -106,7 +102,7 @@ public class AzionePiazzamento implements Azione{
 							}
 							if (mappa[x][y]!=SokoPieces.floor ){
 								mar.result=Result.Overriding;
-								mar.setErrMsg("Overriding at", type, x, y);
+								mar.setErrMsg("Overriding "+ mappa[x][y]+" at", type, x, y);
 								return mar;
 							}
 							mappa[x][y]= SokoPieces.me;
