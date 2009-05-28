@@ -34,11 +34,12 @@ public class SokoCompiler
         barraframe = new JFrame(); 
 		barraframe.setSize(400,100); 
 		barraframe.setTitle("Loading...");
-        
+        SokoPieces[][] mappa = p.getMap();
 		if(!p.HasError()){
-        	if(checkIntegrity(p.getMap())){
+        	if(checkIntegrity(mappa)){
+        		//colorMap(mappa);
         		barraframe.dispose();
-		    	sokoapplet =new Sokoban(p.getMap());
+		    	sokoapplet =new Sokoban(mappa);
 		    	sokoframe = new JFrame(); 
 		    	sokoframe.setSize(800,600); 
 		    	sokoframe.setTitle("Sokoban");
@@ -65,6 +66,68 @@ public class SokoCompiler
         e.printStackTrace();
         }
     }
+    private class PiecesAndBool{
+    	public SokoPieces piece;
+    	public boolean visited;
+    }
+	private static boolean colorMap(SokoPieces[][] map) {
+		
+		int h=map.length;
+		int w=map[0].length;
+		int wallX,wallY;
+		
+		PiecesAndBool[][] coloredMap=new PiecesAndBool[h+2][w+2];
+		for(int i=0; i<h ; i++)
+			for(int j=0; j<w ; j++){
+				coloredMap[i+1][j+1].piece=map[i][j];
+				coloredMap[i+1][j+1].visited=false;
+			}
+		for(int i=0; i<h+2; i++){
+			coloredMap[i][0].piece=SokoPieces.blank;
+			coloredMap[i][w+1].piece=SokoPieces.blank;
+		}
+		for(int i=0; i<w+2; i++){
+			coloredMap[0][i].piece=SokoPieces.blank;
+			coloredMap[h+1][i].piece=SokoPieces.blank;
+		}
+				
+		/*for(int i=0; i<map.length; i++)					//cerco sokoban
+			for(int j=0; j<map[i].length || map[i][j]!=SokoPieces.me; j++);
+		sokoX=i; sokoY=j;*/
+		boolean end=false;
+		for(int i=1; i<h+1 && !end; i++)
+			for(int j=1; j<w+1 ; j++)
+				if(coloredMap[i][j].piece==SokoPieces.wall){
+					wallX=i;
+					wallY=j;
+					end=true;
+					break;
+				}
+		end=false;
+		int offq,offr,q,r;
+		//while(!end){
+					//if(coloredMap[offq][offr].piece==SokoPieces.wall &&
+						//	!coloredMap[offq][offr].visited)
+						coloredMap=checkBounds(coloredMap, 1 , 1);
+				//}
+				
+		//}
+		
+		
+	}
+
+	private static PiecesAndBool[][] checkBounds(PiecesAndBool[][] coloredMap, int posx, int posy) {
+
+		int offq,offr;
+		
+		for(offq=-1; offq<=1; offq++)
+			for(offr=-1; offr<=1; offr++)
+				
+			
+		return null;
+	}
+
+	
 
 	private static boolean checkIntegrity(SokoPieces[][] map) {
 		
