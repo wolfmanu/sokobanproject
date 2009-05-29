@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
+import sun.awt.windows.ThemeReader;
 
 public class Sokoban extends Applet {
 
@@ -385,7 +386,8 @@ public class Sokoban extends Applet {
 	Font fontb = new Font("Helvetica", Font.BOLD, 12);
 	
 	public Sokoban(SokoPieces[][] mappa){
-		levels=convertMap(mappa);
+		levels = convertMap(mappa);
+		
 	}
 	
 	
@@ -414,8 +416,8 @@ public class Sokoban extends Applet {
 		/************/
 		
 		try {
-			in1 = new FileInputStream("audio/doh.wav");
-			doh = new AudioStream(in1);   
+			//in1 = new FileInputStream("audio/doh.wav");
+			//doh = new AudioStream(in1);   
 			in2 = new FileInputStream("audio/woohoo.wav");
 			wow = new AudioStream(in2);   
 		} catch (FileNotFoundException e1) {
@@ -472,7 +474,6 @@ public class Sokoban extends Applet {
 			j.flush();
 			
 			newLevel(0);
-			//setSize(800, 600);
 			requestFocus();
 		}
 		
@@ -529,7 +530,7 @@ public class Sokoban extends Applet {
 					x += 16;
 					if (levelS[i] == SokoPieces.blank) continue;
 					if (r.contains(x,y)) {// only draw the images necessary for move!
-						System.out.println("("+x/16+","+y/16+")="+levelS[i]);
+						//System.out.println("("+x/16+","+y/16+")="+levelS[i]);
 						int k=levelS[i].ordinal();
 						
 						g.drawImage(tiles[k], x, y, this);
@@ -555,6 +556,7 @@ public class Sokoban extends Applet {
 			
 		public boolean keyDown(Event e, int key) {
 			uc = false;
+			int scelta;
 			switch (e.key) {
 				case 'H': uc = true;
 				case 'h': case Event.LEFT: movearound(-1, 0); break;
@@ -564,14 +566,32 @@ public class Sokoban extends Applet {
 				case 'k': case Event.UP: movearound(0, -1); break;
 				case 'J': uc = true;
 				case 'j': case Event.DOWN: movearound(0, 1); break;
-				case '+':
+				//case '+':
 				/*case '-': currlevel += e.key == '+' ? 1 : -1;
 							if (currlevel < 0) currlevel = 0;
 							else if (currlevel == levels.length) currlevel = levels.length - 1;*/
-				case 'A': newLevel(currlevel); repaint(); break;
+				case 'a':
+				case 'A': 
+					scelta=JOptionPane.showConfirmDialog(this, "Vuoi davvero ricominciare da capo?");
+					if(scelta==0){
+						newLevel(currlevel); repaint(); 
+					}
+					break;
 				case 'u': undomove(); break;
-				//case 'S': saveGame(); break;
-				//case 'R': if (gamesaved) restoreGame(); break;
+				case 'S': 
+					saveGame(); 
+					JOptionPane.showMessageDialog(this, "Salvataggio effettuato.",
+							"Saving", JOptionPane.INFORMATION_MESSAGE);
+					break;
+				case 'R': 
+					scelta=JOptionPane.showConfirmDialog(this, "Vuoi davvero caricare il salvataggio?");
+					if(scelta==0){
+						if (gamesaved) restoreGame(); 
+						else
+							JOptionPane.showMessageDialog(this, "Nessun salvataggio presente.",
+									"Attenzione", JOptionPane.ERROR_MESSAGE);
+					}
+					break;
 			}
 			return true;
 		}
@@ -580,7 +600,8 @@ public class Sokoban extends Applet {
 			currlevel = l; push = 0; move = 0;
 			//w = 0; h = 0; levelS = levels[currlevel];
 			w = 0; h = 0; 
-			levelS = levels;
+			levelS=new SokoPieces[levels.length];
+			System.arraycopy(levels ,0, levelS, 0, levels.length);
 			lastcount = 0;
 			int W = 0;
 			for (int i = 0; i < levelS.length; i++)
@@ -595,7 +616,7 @@ public class Sokoban extends Applet {
 			w = 72 + (d.width - 72 - 16 * w) / 2; h = (d.height - 16 * h) / 2;
 		}
 		
-		/*public void restoreGame() {
+		public void restoreGame() {
 			currlevel = savecurrlevel;
 			w = savew; h = saveh; push = savepush; move = savemove;
 			levelS = savelevelS; gamesaved = false;
@@ -608,7 +629,7 @@ public class Sokoban extends Applet {
 			savelevelS = new SokoPieces[levelS.length];
 			System.arraycopy(levelS ,0, savelevelS, 0, levelS.length);
 			gamesaved = true;
-		}*/
+		}
 		
 		public int	moveone(int pos, int x, int y, int dx, int dy) {
 			int i;
@@ -652,18 +673,18 @@ public class Sokoban extends Applet {
 					if (b) {
 						//wow.play();
 						AudioPlayer.player.start(wow);
-						AudioPlayer.player.stop(wow); 
+						//AudioPlayer.player.stop(wow); 
 						//try { Thread.sleep(2000); } catch (InterruptedException e) {};
 						//newLevel(currlevel + 1);
 						//repaint();
 						ImageIcon im=new ImageIcon("img/cup.png");
 						JOptionPane.showMessageDialog(this, "Complimenti hai vinto!",
 													"Vittoria!", JOptionPane.PLAIN_MESSAGE, im);
+						this.stop();
+						SokoCompiler.sokoframe.dispose();
 					}
 				} else {
 					pos1 = savepos1; pos2 = savepos2; pos3 = savepos3;
-					AudioPlayer.player.start(doh);
-					AudioPlayer.player.stop(doh); 
 				}
 			} while (uc);
 		}

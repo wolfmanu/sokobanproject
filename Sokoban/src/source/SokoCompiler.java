@@ -1,6 +1,9 @@
 package source;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.io.*;
 
 import javax.swing.JFrame;
@@ -16,32 +19,36 @@ import Generated.SokoParserCup;
 
 public class SokoCompiler
 {
-	static Sokoban sokoapplet;
+	static private Sokoban sokoapplet;
 	static JFrame sokoframe;
-	static JFrame barraframe;
-	static SokoParserCup p;
+	static private JFrame barraframe;
+	static private SokoParserCup p;
+	static private JTextArea msg;
 	
     static public void main(String argv[])
     {
     try {
         // Istanzio lo scanner aprendo il file di ingresso argv[0]
-        Lexer l = new Lexer(new FileReader("Maps/mappa1.map"));
+        Lexer l = new Lexer(new FileReader("Maps/mappaEasy.map"));
         // Istanzio il parser
         p = new SokoParserCup(l);
         // Avvio il parser
         Object result = p.parse();
         
+        Dimension screenSize =Toolkit.getDefaultToolkit().getScreenSize();
+        int dimScrX=screenSize.width, dimScrY=screenSize.height;
         barraframe = new JFrame(); 
-		barraframe.setSize(400,100); 
+		barraframe.setSize(400,400); 
+		barraframe.setLocation((dimScrX-400)/2, (dimScrY-400)/2);
 		barraframe.setTitle("Loading...");
         SokoPieces[][] mappa = p.getMap();
 		if(!p.HasError()){
-        	if(checkIntegrity(mappa)){
-        		//colorMap(mappa);
+        	if(checkIntegrity(mappa) && colorMap(mappa)){
         		barraframe.dispose();
 		    	sokoapplet =new Sokoban(mappa);
 		    	sokoframe = new JFrame(); 
 		    	sokoframe.setSize(800,600); 
+		    	sokoframe.setLocation((dimScrX-800)/2, (dimScrY-600)/2);
 		    	sokoframe.setTitle("Sokoban");
 		    	
 		    	sokoframe.getContentPane().add(sokoapplet, BorderLayout.CENTER); 
@@ -66,7 +73,7 @@ public class SokoCompiler
         e.printStackTrace();
         }
     }
-    private class PiecesAndBool{
+    private static class PiecesAndBool{
     	public SokoPieces piece;
     	public boolean visited;
     }
@@ -74,67 +81,113 @@ public class SokoCompiler
 		
 		int h=map.length;
 		int w=map[0].length;
-		int wallX,wallY;
-		
-		PiecesAndBool[][] coloredMap=new PiecesAndBool[h+2][w+2];
+		msg.append("Checkig map bounds...\n");
+		barraframe.repaint();
+		//PiecesAndBool[][] coloredMap=new PiecesAndBool[h+2][w+2];
+		/*boolean[][] coloredMap= new boolean[h][w];
 		for(int i=0; i<h ; i++)
 			for(int j=0; j<w ; j++){
-				coloredMap[i+1][j+1].piece=map[i][j];
-				coloredMap[i+1][j+1].visited=false;
-			}
-		for(int i=0; i<h+2; i++){
+				System.out.println(i+" "+j);
+				//coloredMap[i+1][j+1]=new PiecesAndBool();
+				//coloredMap[i+1][j+1].piece=map[i][j];
+				//coloredMap[i+1][j+1].visited=false;
+				coloredMap[i][j]=false;
+			}*/
+		/*for(int i=0; i<h+2; i++){
 			coloredMap[i][0].piece=SokoPieces.blank;
 			coloredMap[i][w+1].piece=SokoPieces.blank;
 		}
 		for(int i=0; i<w+2; i++){
 			coloredMap[0][i].piece=SokoPieces.blank;
 			coloredMap[h+1][i].piece=SokoPieces.blank;
+		}*/
+		
+		//if((coloredMap=checkBounds(coloredMap, 1 , 1))==null){
+		for(int i=0; i<map.length; i++){		//controllo a partire da tutti i punti del bordo
+			if((map=checkBounds(map, i , 0))==null){ 
+				msg.append("Checking bounds FAILED1!");
+				return false;
+			}
+			if((map=checkBounds(map, i , map[0].length-1))==null){ 
+				msg.append("Checking bounds FAILED2!");
+				return false;
+			}
+			if((map=checkBounds(map, 0 , i))==null){ 
+				msg.append("Checking bounds FAILED3!");
+				return false;
+			}
+			if((map=checkBounds(map, map.length-1 , i))==null){ 
+				msg.append("Checking bounds FAILED4!");
+				return false;
+			}
 		}
-				
-		/*for(int i=0; i<map.length; i++)					//cerco sokoban
-			for(int j=0; j<map[i].length || map[i][j]!=SokoPieces.me; j++);
-		sokoX=i; sokoY=j;*/
-		boolean end=false;
-		for(int i=1; i<h+1 && !end; i++)
-			for(int j=1; j<w+1 ; j++)
-				if(coloredMap[i][j].piece==SokoPieces.wall){
-					wallX=i;
-					wallY=j;
-					end=true;
-					break;
-				}
-		end=false;
-		int offq,offr,q,r;
-		//while(!end){
-					//if(coloredMap[offq][offr].piece==SokoPieces.wall &&
-						//	!coloredMap[offq][offr].visited)
-						coloredMap=checkBounds(coloredMap, 1 , 1);
-				//}
-				
-		//}
-		
-		
+		msg.append("Checking bounds completed!");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {}
+		return true;
 	}
 
-	private static PiecesAndBool[][] checkBounds(PiecesAndBool[][] coloredMap, int posx, int posy) {
-
+	/*private static PiecesAndBool[][] checkBounds(PiecesAndBool[][] coloredMap, int posx, int posy) {
 		int offq,offr;
 		
 		for(offq=-1; offq<=1; offq++)
 			for(offr=-1; offr<=1; offr++)
-				
-			
-		return null;
+				if (offq!=0 && offr!=0 && offr!=offq){
+					if (!coloredMap[posx+offq][posy+offr].visited)
+						if(coloredMap[posx+offq][posy+offr].piece==SokoPieces.blank)
+							continue;
+						else if(coloredMap[posx+offq][posy+offr].piece==SokoPieces.wall)
+							coloredMap[posx+offq][posy+offr].visited=true;
+						else if(coloredMap[posx+offq][posy+offr].piece==SokoPieces.floor){
+							coloredMap[posx+offq][posy+offr].piece=SokoPieces.blank;
+							coloredMap[posx+offq][posy+offr].visited=true;
+							if(checkBounds(coloredMap, posx+offq, posy+offr)==null)
+								return null;
+						}
+						else return null;							
+				}
+		return coloredMap;
 	}
-
-	
+*/
+	private static SokoPieces[][] checkBounds(SokoPieces[][] Map, int posx, int posy) {
+		int[] offq={-1, 0, 0, 0, 1};
+		int[] offr={0, -1, 0, 1, 0};
+		System.out.println("entro checkbounds, "+posx+", "+posy);
+		//for(offq=-1; offq<=1; offq++)
+			//for(offr=-1; offr<=1; offr++)
+		if(Map[posx][posy]==SokoPieces.wall)
+			return Map;
+		for(int i=0; i<5; i++)
+				if ( (posx+offq[i])>=0 && (posy+offr[i])>=0 && 
+						(posx+offq[i])<Map.length && (posy+offr[i])<Map[0].length){
+					System.out.println("Checking Map["+(posx+offq[i])+"]["+(posy+offr[i])+"]="+Map[posx+offq[i]][posy+offr[i]].name());
+					if(Map[posx+offq[i]][posy+offr[i]]!=SokoPieces.blank && 
+							Map[posx+offq[i]][posy+offr[i]]!=SokoPieces.wall){
+						if(Map[posx+offq[i]][posy+offr[i]]==SokoPieces.floor){
+							Map[posx+offq[i]][posy+offr[i]]=SokoPieces.blank;
+							//coloredMap[posx+offq][posy+offr]=true;
+							System.out.println("Richiamo");
+							if((Map=checkBounds(Map, posx+offq[i], posy+offr[i]))==null)
+								return null;
+						}
+						else {
+							msg.append("Errore in Map["+(posx+offq[i])+"]["+(posy+offr[i])+"]="+
+									Map[posx+offq[i]+1][posy+offr[i]+1].name()+"\n"); //"+1" user-friendly
+							barraframe.repaint();
+							return null;	//ho trovato qlcs fuori dal contorno		
+						}
+					}
+				}
+		return Map;
+	}
 
 	private static boolean checkIntegrity(SokoPieces[][] map) {
 		
 		int goal=0, box=0, me=0, k=0;
 		boolean err=false;
 		
-		JTextArea msg=new JTextArea("Checking map integrity...");
+		msg=new JTextArea("Checking map integrity...\n");
 		msg.setEditable(false);
 		msg.setRows(1);
 		//JProgressBar progressBar = new JProgressBar(0, 100);
@@ -160,42 +213,44 @@ public class SokoCompiler
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {}
 		if(me<1){
-			msg.setText("Too fiew sokoban defined");
+			msg.append("Too fiew sokoban defined");
 			//System.err.println("Too many sokoban defined");
 			err=true;
 		}
 		if(me>1){
-			msg.setText("Too many sokoban defined");
+			msg.append("Too many sokoban defined");
 			//System.err.println("Too many sokoban defined");
 			err=true;
 		}
 		if(goal<p.blocchiMobili){
-			msg.setText("Too fiew goal defined");
+			msg.append("Too fiew goal defined");
 			//System.err.println("Too fiew goal defined");
 			err=true;
 		}
 		if(goal>p.blocchiMobili){
-			msg.setText("Too many goal defined");
+			msg.append("Too many goal defined");
 			//System.err.println("Too may goal defined");
 			err=true;
 		}
 		if(box<p.blocchiMobili){
-			msg.setText("Too fiew box defined");
+			msg.append("Too fiew box defined");
 			//System.err.println("Too fiew box defined "+box+ goal);
 			err=true;
 		}
 		if(box>p.blocchiMobili){
-			msg.setText("Too many box defined");
+			msg.append("Too many box defined");
 			//System.err.println("Too may box defined");
 			err=true;
 		}
 		if(err){
 			msg.setForeground(Color.RED);
-			barraframe.getContentPane().add(msg);
+			//barraframe.getContentPane().add(msg);
+			msg.append("\nMap integrity FAILED!");
 			barraframe.repaint();
 			return false;
 		}
-			
+		msg.append("\nMap integrity completed\n");
+		barraframe.repaint();
 		return true;
 	}
 }
