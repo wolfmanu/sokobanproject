@@ -30,24 +30,25 @@ parser code
 	public static int semantic_error = 0;
 	boolean error=false;
 	public int blocchiMobili=0;
-
+    private StringBuffer errList=new StringBuffer();
 	public void syntax_error(Symbol sym) {
 		StringBuffer m = new StringBuffer("Syntax Error");
-
+		m.append("\nSyntax Error:");
 		if (sym.left != -1) {
 			m.append(" (line " + (sym.left+1));   
-			m.append(", column " + (sym.right+1) + ") ");
+			m.append(", column " + (sym.right+1) + ")");
 		}
 		System.err.print(m);
 	} 
 
 	public void report_error(String message, Object info) {
-		StringBuffer m = new StringBuffer("Error");
-		m.append(" : " + message);
+		//StringBuffer m = new StringBuffer("Error");
+		errList.append("\nError:");
+		errList.append(" : " + message);
 		if (info != null) {
-			m.append(" (line " + (((java_cup.runtime.Symbol) info).left + 1) + ")");
+			errList.append(" (line " + (((java_cup.runtime.Symbol) info).left + 1) + ")");
 		}
-		System.err.println(m);
+		//System.err.println(m);
 	}
 	
 	public void report_fatal_error(String message, Object info) {
@@ -60,6 +61,9 @@ parser code
 	
 	public boolean HasError(){
 		return error;
+	}
+	public StringBuffer getErrList(){
+		return errList;
 	}
 :}
 
@@ -122,7 +126,7 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 						System.out.println("mappa.len="+parser.mappa.length+"-mappa[0].len="+parser.mappa[0].length);
 					}
 					else{
-						parser.report_error("Errore dichiarazione dimensioni",null);
+						parser.report_error("Dimension declaration error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 					}
 				:}| 
@@ -141,7 +145,7 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 						System.out.println("mappa.len="+parser.mappa.length+"-mappa[0].len="+parser.mappa[0].length);
 					}
 					else{
-						parser.report_error("Errore dichiarazione dimensioni",null);
+						parser.report_error("Dimension declaration error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 					}
 				:};
@@ -180,7 +184,7 @@ definizioni ::=	elemento |
 elemento ::=	VAR def PV 
 				{:
 					if (parser.error==true){
-						parser.report_error("Errore dichiarazione",null);
+						parser.report_error("Declaration error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						SemanticErrorNumber++;
 						RESULT=null;
 					}
@@ -196,7 +200,7 @@ definizione ::= ID:i UGUALE INT:n
 				{: 
 					System.out.println((String)i+"="+(Integer)n);
 					if (varMap.containsKey((String)i)){
-						parser.report_error("Ridefinizione variabile "+(String)i,null);
+						parser.report_error("Variable "+(String)i+" already defined ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 					}
 					else
@@ -209,13 +213,13 @@ definizione ::= ID:i UGUALE INT:n
 				{:
 					System.out.println((String)i1+"="+(String)i2);
 					if (varMap.containsKey((String)i1)){
-						parser.report_error("Ridefinizione variabile "+(String)i1,null);
+						parser.report_error("Variable "+(String)i1+" already defined ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 					}
 					else if(varMap.containsKey((String)i2) && varMap.get((String)i2)!=null)
 						varMap.put((String)i1, varMap.get((String)i2) );
 					else{
-						parser.report_error("Undefined variable "+(String)i1,null);
+						parser.report_error("Undefined variable "+(String)i1+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 					}
 				:}|
@@ -223,7 +227,7 @@ definizione ::= ID:i UGUALE INT:n
 				{:
 					System.out.println((String)i);
 					if (varMap.containsKey((String)i)){
-						parser.report_error("Ridefinizione variabile "+(String)i,null);
+						parser.report_error("Variable "+(String)i+" already defined ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 					}
 					else 
@@ -242,7 +246,7 @@ corpo 	::=	cicloFor :f
 					MapAndResult mar=((AzioneFor)f).executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
 						parser.error=true;
-						parser.report_error(mar.ErrMsg,null);
+						parser.report_error(mar.ErrMsg,CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						SemanticErrorNumber++;
 						RESULT=null;
 					}
@@ -252,7 +256,7 @@ corpo 	::=	cicloFor :f
 					}
 				}
 				else{
-					parser.report_error("For cicle null",null);
+					//parser.report_error("For cicle null",null);
 					parser.error=true;
 					RESULT=null;
 				}
@@ -264,7 +268,7 @@ corpo 	::=	cicloFor :f
 					MapAndResult mar=ap.executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
 						parser.error=true;
-						parser.report_error(mar.ErrMsg,null);
+						parser.report_error(mar.ErrMsg,CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						SemanticErrorNumber++;
 						RESULT=null;
 					}
@@ -274,7 +278,7 @@ corpo 	::=	cicloFor :f
 					}
 				}
 				else{
-					parser.report_error("Placement null",null);
+					//parser.report_error("Placement null",null);
 					parser.error=true;
 					RESULT=null;
 				}
@@ -286,8 +290,7 @@ corpo 	::=	cicloFor :f
 					MapAndResult mar=ai.executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
 						parser.error=true;
-						parser.report_error(mar.ErrMsg,null);
-						/**/System.out.println("errore if");
+						parser.report_error(mar.ErrMsg,CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						SemanticErrorNumber++;
 						RESULT=null;
 					}
@@ -297,7 +300,7 @@ corpo 	::=	cicloFor :f
 					}
 				}
 				else{
-					parser.report_error("If section null",null);
+					//parser.report_error("If section null",null);
 					parser.error=true;
 					RESULT=null;
 				}
@@ -307,7 +310,7 @@ corpo 	::=	cicloFor :f
 cicloFor ::=	FOR TO assegnazione:as PV termine:t PV avanzamento:av TC contenuto:c END FOR PV 
 				{:
 					if (as==null || c==null || t==null){
-						parser.report_error("For null",null);
+						//parser.report_error("For null",null);
 						parser.error=true;
 						RESULT = null;
 					}
@@ -331,12 +334,14 @@ myID ::= ID:id {: RESULT=id; :} |
 assegnazione::=	ID:id1 UGUALE myID:id2 
 				{:
 					if (!varMap.containsKey(id1)){
-						parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
+						//parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
+						parser.report_error("Undefined variable "+id1+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
 					else if (!varMap.containsKey(id2)){
-						parser.report_error(Result.UndefinedVariable.name()+" "+id2,null);
+						//parser.report_error(Result.UndefinedVariable.name()+" "+id2,null);
+						parser.report_error("Undefined variable "+id2+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -348,7 +353,8 @@ assegnazione::=	ID:id1 UGUALE myID:id2
 					if (varMap.containsKey(id1) )
 						RESULT=new Assegnazione(id1, id2);
 					else{
-						parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
+						parser.report_error("Undefined variable "+id1+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
 						parser.error=true;
 						RESULT=null;
 					}
@@ -359,12 +365,14 @@ termine	::=	ID:id1 segno:s myID:id2
 //termine	::=	ID:id1 segno:s ID:id2
 			{:
 				if(!varMap.containsKey((String)id1)){
-					parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
+					//parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
+					parser.report_error("Undefined variable "+id1+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 					parser.error=true;
 					RESULT=null;
 				}
 				else if(!varMap.containsKey((String)id2)){
-					parser.report_error(Result.UndefinedVariable.name()+" "+id2,null);
+					//parser.report_error(Result.UndefinedVariable.name()+" "+id2,null);
+					parser.report_error("Undefined variable "+id2+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 					parser.error=true;
 					RESULT=null;
 				}
@@ -375,7 +383,8 @@ termine	::=	ID:id1 segno:s myID:id2
 			ID:id1 segno:s INT:id2 
 			{:
 				if(!varMap.containsKey((String)id1)){
-					parser.report_error(Result.UndefinedVariable.name(),null);
+					//parser.report_error(Result.UndefinedVariable.name(),null);
+					parser.report_error("Undefined variable "+id1+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 					parser.error=true;	
 					RESULT=null;
 				}
@@ -397,7 +406,7 @@ avanzamento ::=	ID INCR {: RESULT=new Boolean(true); :}|
 contenuto ::=	piazzamento:p /*creo lista azioni */
 				{:
 					if(p==null){
-						parser.report_error("Placement cont null",null);
+						parser.report_error("PLACEMENT Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -407,7 +416,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 				cicloFor:f /*creo lista azioni */
 				{:
 					if(f==null){
-						parser.report_error("For cont null",null);
+						parser.report_error("FOR loop Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -417,7 +426,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 				sezioneIF :i /*creo lista azioni */
 				{:
 					if(i==null){
-						parser.report_error("If cont null",null);
+						parser.report_error("IF section Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -427,7 +436,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 				contenuto:c piazzamento:p /*aggiungo a lista azioni */
 				{:
 					if(p==null || c==null){
-						parser.report_error("Cont or placement null",null);
+						parser.report_error("PLACEMENT Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -439,7 +448,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 				contenuto:c sezioneIF:i /*aggiungo a lista azioni */
 				{:
 					if(i==null || c==null){
-						parser.report_error("Cont or if null",null);
+						parser.report_error("IF section Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -451,7 +460,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 				contenuto:c cicloFor:f /*aggiungo a lista azioni */
 				{:
 					if(f==null || c==null){
-						parser.report_error("Cont or For null",null);
+						parser.report_error("FOR loop Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -466,12 +475,25 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 			
 piazzamento ::=	tipo:t1 TO coppia:cp TC PV 
 				{:
+					System.err.println("LINE "+ 
+							((java_cup.runtime.Symbol)CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-2)).right+
+							((java_cup.runtime.Symbol)CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-2)).value);
 					if(cp!=null)
 						((AzionePiazzamento)cp).setType(t1);						
 					RESULT=cp;
-				:} /*| 
-				tipo TO coppia TC error {: parser.report_error("piazzamento errore",null); :}|
-				tipo error {: parser.report_error("piazzamento errore",null); :}|
+				:} | 
+				tipo TO coppia TC error 
+				{: 
+					parser.report_error("Missing ',' at the end of placement", null);
+					//System.err.println(((java_cup.runtime.Symbol) CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-2)).value); 
+					parser.error=true; 
+				:}|
+				tipo:t error 
+				{: 
+					
+					parser.report_error("Placement syntax error",(java_cup.runtime.Symbol) CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-1));
+					parser.error=true;
+				:}/*|
 				tipo TO error TC PV {: parser.report_error("piazzamento errore",null); :}*/
 				;
 tipo ::=	MOB:t {: RESULT = t; :} |
@@ -482,11 +504,7 @@ tipo ::=	MOB:t {: RESULT = t; :} |
 coppia ::=	coordinata:t1 VIR coordinata:t2
 			{:// System.out.println("_"+(String)t1+(String)t2);
 				RESULT=new AzionePiazzamento(t1,t2);
-			:} /*|
-			coordinata error 
-		 			{: parser.report_error("coppia errore",null); :}|
-			error coordinata 
-					{: parser.report_error("coppia errore",null); :}*/;
+			:} ;
 					
 coordinata ::=	INT:t {: RESULT=t; :} |
 				//ID:t
@@ -507,13 +525,22 @@ sezioneIF ::= IF TO termine:t TC contenuto:c END IF PV
 						RESULT = ai;
 					}
 					else{
-						parser.report_error("Term or cont null",null);
-						parser.error=true;
+						//parser.report_error("IF section Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.error=true;
 						RESULT = null;
 					}
 						
-				:}/*|
-				IF error {: parser.report_error("sezione if errore",null); :}*/;
+				:}|
+				IF TO termine:t TC contenuto:c END IF error 
+				{: 
+					parser.report_error("Missing ',' at the end of IF section",null);
+					parser.error=true; 
+				:}|
+				IF error 
+				{: 
+					parser.report_error("Missing smt at the end of IF section",null);
+					parser.error=true; 
+				:};
 
 
 

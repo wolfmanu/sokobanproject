@@ -3,13 +3,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.Window;
-import java.io.*;
+import java.io.FileReader;
 
 import javax.swing.JFrame;
-import javax.swing.JProgressBar;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import Generated.Lexer;
 import Generated.SokoParserCup;
@@ -39,6 +37,7 @@ public class SokoCompiler
         int dimScrX=screenSize.width, dimScrY=screenSize.height;
         barraframe = new JFrame(); 
 		barraframe.setSize(400,400); 
+		barraframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		barraframe.setLocation((dimScrX-400)/2, (dimScrY-400)/2);
 		barraframe.setTitle("Loading...");
         SokoPieces[][] mappa = p.getMap();
@@ -60,12 +59,16 @@ public class SokoCompiler
         	}
         }
         else{
-    		JTextArea msg=new JTextArea("Error");
+        	StringBuffer err=p.getErrList();
+        	JOptionPane.showMessageDialog(barraframe, "E' stato rilevato un errore",
+					"Attenzione", JOptionPane.ERROR_MESSAGE);
+    		JTextArea msg=new JTextArea(err.toString());
     		barraframe.getContentPane().add(msg); 
     		msg.setEditable(false);
     		msg.setRows(1);
     		msg.setEditable(false);
         	barraframe.setVisible(true);
+        	
         }
         	
     }
