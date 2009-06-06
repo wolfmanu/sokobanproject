@@ -1,10 +1,10 @@
-package generated;
+package it.polito.let.generated;
 
 import java_cup.runtime.*;
-import static Generated.SokoParserSym.*;
+import static it.polito.let.generated.SokoParserSym.*;
 import java.io.IOException;
-import source.TipoPiazzamento;
-import source.TipoCondizione;
+import it.polito.let.TipoPiazzamento;
+import it.polito.let.TipoCondizione;
 
  
 %%
