@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Sokoban" default="build" basedir=".">
         <property name="src.dir" location="${basedir}/src" />
-        <property name="generated.dir" location="${basedir}/generated" />
+		<property name="generated.dir" location="${src.dir}" />
         <property name="build.dir" location="${basedir}/bin" />
         <property name="lib.dir" location="${basedir}/lib" />
         <property name="parser.dir" location="${basedir}/parser" />
@@ -11,11 +11,12 @@
         <property name="cup.runtime.jar" location="${lib.dir}/java-cup-11-runtime.jar"/>
         <property name="jflex.jar" location="${lib.dir}/jflex-1.4.1.jar"/>
         
-        <property name="server.port" value="2020" />
+      
         <property name="keep.artifacts" value="false" />
-        <property name="clientside.check" value="true" />
+		<property name="map.game" value="mappa1.map" />
+        
                 
-        <taskdef name="cup"  classname="java_cup.anttask.CUPTask"  classpath="${cup.jar}"       />
+		<taskdef name="cup"  classname="java_cup.anttask.CUPTask"  classpath="${cup.jar}"       />
         <taskdef classname="JFlex.anttask.JFlexTask" name="jflex" classpath="${jflex.jar}" />
         
         <!--<property name="logging.config.file" location="${basedir}/logging.properties"/>-->
@@ -37,14 +38,12 @@
         
         <target name="init">
                 <mkdir dir="${build.dir}" />
-                <mkdir dir="${dynamic.build.dir}" />
         </target>
 
         <target name="clean" description="Clean all">
                 <delete dir="${build.dir}" />
                 <delete includeemptydirs="true">
                     <fileset dir="${generated.dir}" includes="**/*"/>
-                        <fileset dir="${dynamic.build.dir}" includes="**/*"/>
                 </delete>
         </target>
 
@@ -59,21 +58,13 @@
         </target>
 
         <target name="lex" unless="generate-artifacts.notRequired" depends="init">
-                <jflex file="${parser.dir}/JHP.lex" destdir="${generated.dir}" />
-                <jflex file="${parser.dir}/HTTP.lex" destdir="${generated.dir}" />
+                <jflex file="${parser.dir}/sokoScanner.lex" destdir="${generated.dir}" />
         </target>
         
         <target name="cup" unless="generate-artifacts.notRequired" depends="init, lex">
-                <cup srcfile="${parser.dir}/JHP.cup" destdir="${generated.dir}"
-                        parser="JHPCup"
-                        symbols="JHPSym"
-                        nosummary="true"
-                        nopositions="true"
-                        nowarn="true"
-                />
-                <cup srcfile="${parser.dir}/HTTP.cup" destdir="${generated.dir}"
-                        parser="HTTPCup"
-                        symbols="HTTPSym"
+                <cup srcfile="${parser.dir}/sokoParser.cup" destdir="${generated.dir}"
+                        parser="SokoParserCup"
+                        symbols="SokoParserSym"
                         nosummary="true"
                         nopositions="true"
                         nowarn="true"
@@ -96,12 +87,10 @@
                 </javac>
         </target>
 
-        <target name="run.server" depends="build">
-                <echo>Running server on port ${server.port}</echo>
-                <java classname="it.polito.let.http.Server" failonerror="true" fork="yes">
-                        <arg value="${server.port}" />
-                        <sysproperty key="jhp.server.keep.artifacts" value="${keep.artifacts}"/>
-                        <sysproperty key="clientside.check" value="${clientside.check}"/>
+        <target name="play.game" depends="build">
+                <echo>Starting game ${map.game}</echo>
+                <java classname="it.polito.let.game" failonerror="true" fork="yes">
+                        <arg value="${map.game}" />
                         <classpath>
                                 <path refid="run.classpath" />
                                 <pathelement path="${build.dir}" />

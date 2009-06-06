@@ -1,4 +1,4 @@
-package it.polito.let;
+package it.polito.let.util;
 
 public class strVar extends element{
 	public String x;

@@ -1,25 +1,27 @@
-package it.polito.let;
+package it.polito.let.game;
 
-import java.io.File;
+
+import it.polito.let.util.SokoPieces;
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Event;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.applet.*;
 
-import javax.imageio.ImageIO;
-import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
-import sun.awt.windows.ThemeReader;
 
 public class Sokoban extends Applet {
 
@@ -321,6 +323,12 @@ public class Sokoban extends Applet {
 	
 	};*/
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7627879419613904118L;
+
+
 	SokoPieces levels[] /*= { 
 							{//SokoPieces.cr,
 							//SokoPieces.blank, 

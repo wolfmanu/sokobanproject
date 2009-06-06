@@ -1,4 +1,4 @@
-package it.polito.let;
+package it.polito.let.game;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 
 import it.polito.let.generated.Lexer;
 import it.polito.let.generated.SokoParserCup;
+import it.polito.let.util.SokoPieces;
 
 
 
