@@ -86,7 +86,7 @@
                         </classpath>
                 </javac>
         </target>
-
+ 
         <target name="play.game" depends="build">
                 <echo>Starting game ${map.game}</echo>
                 <java classname="it.polito.let.game.SokoCompiler" failonerror="true" fork="yes">
