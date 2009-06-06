@@ -1,25 +1,19 @@
  
-package generated;
+package it.polito.let.generated;
 
 import java.util.*;
-
+   
 import java_cup.runtime.*;
-import source.SokoPieces.*;
-import source.AzioneFor;
-import source.AzioneIf;
-import source.AzionePiazzamento;
-import source.SokoPieces;
-import source.ListaAzioni; 
-import source.TipoPiazzamento;
-import source.TipoCondizione;
-import source.Condizione;
-import source.intVar;
-import source.strVar;  
-import source.element;
-import source.Azione;
-import source.MapAndResult;
-import source.Result;
-import source.Assegnazione;
+import it.polito.let.AzioneFor;
+import it.polito.let.AzioneIf;
+import it.polito.let.AzionePiazzamento;
+import it.polito.let.SokoPieces; 
+import it.polito.let.ListaAzioni; 
+import it.polito.let.Condizione; 
+import it.polito.let.element;
+import it.polito.let.MapAndResult;
+import it.polito.let.Result;
+import it.polito.let.Assegnazione;
 
   
 parser code 
