@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**/*.lex|**/*.cup" kind="src" path="src"/>
+	<classpathentry excluding="**/*.lex|**/*.cup" kind="src" path="sss"/>
+	<classpathentry excluding="**/*.lex|**/*.cup" kind="src" path="generated"/>
+	<classpathentry excluding="**/*.lex|**/*.cup" kind="src" path="parser"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/java-cup-11-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/java-cup-11.jar"/>

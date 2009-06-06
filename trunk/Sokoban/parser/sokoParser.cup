@@ -1,5 +1,5 @@
  
-package Generated;
+package generated;
 
 import java.util.*;
 
@@ -14,7 +14,7 @@ import source.TipoPiazzamento;
 import source.TipoCondizione;
 import source.Condizione;
 import source.intVar;
-import source.strVar;
+import source.strVar;  
 import source.element;
 import source.Azione;
 import source.MapAndResult;
@@ -31,23 +31,23 @@ parser code
 	boolean error=false;
 	public int blocchiMobili=0;
     private StringBuffer errList=new StringBuffer();
+    
 	public void syntax_error(Symbol sym) {
 		StringBuffer m = new StringBuffer("Syntax Error");
-		m.append("\nSyntax Error:");
 		if (sym.left != -1) {
 			m.append(" (line " + (sym.left+1));   
 			m.append(", column " + (sym.right+1) + ")");
 		}
-		System.err.print(m);
+		m.append("\n"+sym.value );
+		System.err.println(m);
 	}  
 
 	public void report_error(String message, Object info) {
 		//StringBuffer m = new StringBuffer("Error");
-		errList.append("\nError:");
-		errList.append(" : " + message);
+		errList.append("\nError");
+		errList.append(": " + message);
 		if (info != null) {
 			errList.append(" (line " + (((java_cup.runtime.Symbol) info).left + 1) + ")");
-			errList.append("\n info: " + (java_cup.runtime.Symbol) info + ")");
 		}
 		//System.err.println(m);
 	}
@@ -84,7 +84,8 @@ action code
 :}
 
 
-terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE,UGUALEUGUALE, MINUG, MAGUG,MIN, MAG, INCR, DECR, DIVERSO, 			TO, TC, INT, ID, VIR, PV;
+terminal 	VAR, HEIGHT, WIDTH, FOR, IF, END, DIM, NMOB, MOB, FISSI, GOAL, SOKO, UGUALE,UGUALEUGUALE, MINUG, MAGUG,MIN, MAG, MENO, PIU, DIVERSO, 			
+			TO, TC, INT, ID, VIR, PV;
 
 non terminal 	myID,map, part, def, elemento, altezza, larghezza, corpo, definizioni,  definizione, dichiar, numBlocchi, dimBlocchi,
 		cicloFor, contenuto, assegnazione, termine, segno, avanzamento, piazzamento, tipo, coppia, coordinata, sezioneIF;
@@ -262,6 +263,12 @@ corpo 	::=	cicloFor :f
 					RESULT=null;
 				}
 			:}|
+			error cicloFor
+			{:
+				parser.report_error("Syntax error before for loop",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+				parser.error=true;
+				RESULT=null;
+			:} |
 			piazzamento:p 
 			{: 
 				if(p!=null){
@@ -284,6 +291,12 @@ corpo 	::=	cicloFor :f
 					RESULT=null;
 				}
 			:}|
+			error piazzamento
+			{:
+				parser.report_error("Syntax error before placement",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+				parser.error=true;
+				RESULT=null;
+			:} |
 			sezioneIF :si
 			{:
 				if(si!=null){
@@ -305,7 +318,13 @@ corpo 	::=	cicloFor :f
 					parser.error=true;
 					RESULT=null;
 				}
-			:}/*|
+			:} |
+			error sezioneIF
+			{:
+				parser.report_error("Syntax error before if section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+				parser.error=true;
+				RESULT=null;
+			:} /*|
 			error {: parser.report_error("corpo errore",null); :}*/;
 
 cicloFor ::=	FOR TO assegnazione:as PV termine:t PV avanzamento:av TC contenuto:c END FOR PV 
@@ -324,14 +343,32 @@ cicloFor ::=	FOR TO assegnazione:as PV termine:t PV avanzamento:av TC contenuto:
 						azione.la=(ListaAzioni)c;
 						RESULT = azione;
 					}
-				:}/*|
-				FOR error {: parser.report_error("for errore",null); :}*/;
+				:}|
+				FOR TO assegnazione:as PV termine:t PV avanzamento:av TC error END FOR PV 
+				{: 
+					parser.report_error("Error in FOR section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:} |
+				FOR error contenuto:c END FOR PV  
+				{: 
+					parser.report_error("Error in FOR section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:} |
+				FOR error contenuto:c error  
+				{: 
+					parser.report_error("Error in FOR section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:} |
+				FOR TO assegnazione:as PV termine:t PV avanzamento:av TC contenuto:c error 
+				{: 
+					parser.report_error("Error in FOR section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:} ;
 
 myID ::= ID:id {: RESULT=id; :} |
 		WIDTH:id {: RESULT=id; :} |
 		HEIGHT:id {: RESULT=id; :};
 		
-//assegnazione::=	ID:id1 UGUALE ID:id2 
 assegnazione::=	ID:id1 UGUALE myID:id2 
 				{:
 					if (!varMap.containsKey(id1)){
@@ -351,13 +388,10 @@ assegnazione::=	ID:id1 UGUALE myID:id2
 				:} |
 				ID:id1 UGUALE INT:id2
 				{:
-					if (varMap.containsKey(id1) )
+					if (varMap.containsKey(id1) ) 
 						RESULT=new Assegnazione(id1, id2);
 					else{
-						System.err.println(CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top)+" "+
-								CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-1)+" "+
-								CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-2));
-						parser.report_error("Undefined variable "+id1+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-2));
+						parser.report_error("Undefined variable "+id1+" ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						//parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
 						parser.error=true;
 						RESULT=null;
@@ -366,7 +400,6 @@ assegnazione::=	ID:id1 UGUALE myID:id2
 				:};
 
 termine	::=	ID:id1 segno:s myID:id2
-//termine	::=	ID:id1 segno:s ID:id2
 			{:
 				if(!varMap.containsKey((String)id1)){
 					//parser.report_error(Result.UndefinedVariable.name()+" "+id1,null);
@@ -404,43 +437,46 @@ segno	::=	UGUALEUGUALE:s {: RESULT=s; :}|
 			MIN :s {: RESULT=s; :}|
 			DIVERSO :s {: RESULT=s; :};
 		
-avanzamento ::=	ID INCR {: RESULT=new Boolean(true); :}|
-				ID DECR {: RESULT=new Boolean(false); :};  		
+avanzamento ::=	ID PIU PIU {: RESULT=new Boolean(true); :}|
+				ID MENO MENO {: RESULT=new Boolean(false); :};  		
 
 contenuto ::=	piazzamento:p /*creo lista azioni */
 				{:
 					if(p==null){
-						parser.report_error("PLACEMENT Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.report_error("Placement Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
 					else
 						RESULT=new ListaAzioni(p);
 				:}	| 
+				
 				cicloFor:f /*creo lista azioni */
 				{:
 					if(f==null){
-						parser.report_error("FOR loop Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.report_error("FOR loop Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
 					else
 						RESULT=new ListaAzioni(f);
 				:}	|
+				
 				sezioneIF :i /*creo lista azioni */
 				{:
 					if(i==null){
-						parser.report_error("IF section Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.report_error("IF section Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
 					else
 						RESULT=new ListaAzioni(i);
 				:}	|
+				
 				contenuto:c piazzamento:p /*aggiungo a lista azioni */
 				{:
 					if(p==null || c==null){
-						parser.report_error("PLACEMENT Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.report_error("PLACEMENT Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -452,7 +488,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 				contenuto:c sezioneIF:i /*aggiungo a lista azioni */
 				{:
 					if(i==null || c==null){
-						parser.report_error("IF section Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.report_error("IF section Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -464,7 +500,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 				contenuto:c cicloFor:f /*aggiungo a lista azioni */
 				{:
 					if(f==null || c==null){
-						parser.report_error("FOR loop Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+						//parser.report_error("FOR loop Error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 						RESULT=null;
 					}
@@ -486,16 +522,10 @@ piazzamento ::=	tipo:t1 TO coppia:cp TC PV
 						((AzionePiazzamento)cp).setType(t1);						
 					RESULT=cp;
 				:} | 
-				tipo TO coppia TC error 
-				{: 
-					parser.report_error("Missing ',' at the end of placement", null);
-					//System.err.println(((java_cup.runtime.Symbol) CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-2)).value); 
-					parser.error=true; 
-				:}|
 				tipo:t error 
 				{: 
 					
-					parser.report_error("Placement syntax error",(java_cup.runtime.Symbol) CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top-1));
+					parser.report_error("Placement syntax error",(java_cup.runtime.Symbol) CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 					parser.error=true;
 				:}/*|
 				tipo TO error TC PV {: parser.report_error("piazzamento errore",null); :}*/
@@ -506,12 +536,11 @@ tipo ::=	MOB:t {: RESULT = t; :} |
 			SOKO:t {: RESULT = t; :} ;
 		
 coppia ::=	coordinata:t1 VIR coordinata:t2
-			{:// System.out.println("_"+(String)t1+(String)t2);
+			{:
 				RESULT=new AzionePiazzamento(t1,t2);
 			:} ;
 					
 coordinata ::=	INT:t {: RESULT=t; :} |
-				//ID:t
 				myID:t
 				{: 
 					//System.out.println("_"+(String)t);
@@ -535,14 +564,19 @@ sezioneIF ::= IF TO termine:t TC contenuto:c END IF PV
 					}
 						
 				:}|
-				IF TO termine:t TC contenuto:c END IF error 
+				IF TO termine:t TC error END IF PV 
 				{: 
-					parser.report_error("Missing ',' at the end of IF section",null);
+					parser.report_error("Error in IF section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:} |
+				IF error contenuto:c END IF PV 
+				{: 
+					parser.report_error("Syntax error in IF section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 					parser.error=true; 
 				:}|
-				IF error 
+				IF TO termine:t TC contenuto:c error  
 				{: 
-					parser.report_error("Missing smt at the end of IF section",null);
+					parser.report_error("Syntax error in IF section",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 					parser.error=true; 
 				:};
 
