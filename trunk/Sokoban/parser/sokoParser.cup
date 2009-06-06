@@ -4,16 +4,16 @@ package it.polito.let.generated;
 import java.util.*;
    
 import java_cup.runtime.*;
-import it.polito.let.AzioneFor;
-import it.polito.let.AzioneIf;
-import it.polito.let.AzionePiazzamento;
-import it.polito.let.SokoPieces; 
-import it.polito.let.ListaAzioni; 
-import it.polito.let.Condizione; 
-import it.polito.let.element;
-import it.polito.let.MapAndResult;
-import it.polito.let.Result;
-import it.polito.let.Assegnazione;
+import it.polito.let.util.AzioneFor;
+import it.polito.let.util.AzioneIf;
+import it.polito.let.util.AzionePiazzamento;
+import it.polito.let.util.SokoPieces; 
+import it.polito.let.util.ListaAzioni; 
+import it.polito.let.util.Condizione; 
+import it.polito.let.util.element;
+import it.polito.let.util.MapAndResult;
+import it.polito.let.util.Result;
+import it.polito.let.util.Assegnazione;
 
   
 parser code 
@@ -60,7 +60,7 @@ parser code
 	public StringBuffer getErrList(){
 		return errList;
 	}
-:}
+:} 
 
 action code
 {:
