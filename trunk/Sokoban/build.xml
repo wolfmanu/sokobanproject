@@ -89,7 +89,7 @@
 
         <target name="play.game" depends="build">
                 <echo>Starting game ${map.game}</echo>
-                <java classname="it.polito.let.game" failonerror="true" fork="yes">
+                <java classname="it.polito.let.game.SokoCompiler" failonerror="true" fork="yes">
                         <arg value="${map.game}" />
                         <classpath>
                                 <path refid="run.classpath" />
