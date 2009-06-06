@@ -46,6 +46,7 @@ public class SokoCompiler
         		barraframe.dispose();
 		    	sokoapplet =new Sokoban(mappa);
 		    	sokoframe = new JFrame(); 
+		    	sokoframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	sokoframe.setSize(800,600); 
 		    	sokoframe.setLocation((dimScrX-800)/2, (dimScrY-600)/2);
 		    	sokoframe.setTitle("Sokoban");

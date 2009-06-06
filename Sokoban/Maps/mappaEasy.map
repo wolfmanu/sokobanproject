@@ -1,7 +1,7 @@
 #Dimensioni w=19, h=11;
 #BlocchiMobili 1;
 
-var x, y=6,z;
+var y=6,z;
 //		"M^^^^#####" +
 //		"M^^^^#   #" +
 //		"M^^^^#   #" +
@@ -49,7 +49,7 @@ for(x=10; x<=w; x++)
 	#F(y,x);
 end for;
 for(x=2; x<=4; x++)
-	#F(x 5);
+	#F(x, 5);
 	#F(x,9);
 end for;
 	
