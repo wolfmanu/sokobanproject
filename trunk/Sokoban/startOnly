@@ -1,3 +1,0 @@
-#!/bin/bash -f
-
-java -cp /usr/share/java/cup.jar:. Main mappaP.map
