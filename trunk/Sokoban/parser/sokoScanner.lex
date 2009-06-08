@@ -1,7 +1,7 @@
 package it.polito.let.generated;
 
-import java_cup.runtime.*;
-import static it.polito.let.generated.SokoParserSym.*;
+import java_cup.runtime.*; 
+//import static it.polito.let.generated.SokoParserSym.*;
 import java.io.IOException;
 import it.polito.let.util.TipoPiazzamento;
 import it.polito.let.util.TipoCondizione;
