@@ -1,4 +1,3 @@
- 
 package it.polito.let.generated;
 
 import java.util.*;
@@ -20,8 +19,6 @@ parser code
 {:
 	SokoPieces[][] mappa=null;
 
-	public static int syntax_error = 0;
-	public static int semantic_error = 0;
 	boolean error=false;
 	public int blocchiMobili=0;
     private StringBuffer errList=new StringBuffer();
@@ -85,8 +82,7 @@ non terminal 	myID,map, part, def, elemento, altezza, larghezza, corpo, definizi
 		cicloFor, contenuto, assegnazione, termine, segno, avanzamento, piazzamento, tipo, coppia, coordinata, sezioneIF;
 
 start with map;
-
- 
+			
 map 	::= 	definizioni dichiar part 
 				{:
 					if(!parser.error){
@@ -105,8 +101,17 @@ map 	::= 	definizioni dichiar part
 				:} /*|
 				error {: parser.report_error("map errore",null); :}*/;
  
-dichiar	::=	dimBlocchi numBlocchi |// #Dimensioni h=height, w=width;
-			numBlocchi dimBlocchi ;		// #BlocchiMobili 5;
+dichiar	::=	dimBlocchi numBlocchi |
+			numBlocchi dimBlocchi |		
+			dimBlocchi error
+			{:
+				parser.error=true;
+			:}|
+			numBlocchi error
+			{:
+				parser.error=true;
+			:};
+			
 
 dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV 
 				{:
@@ -144,6 +149,21 @@ dimBlocchi ::= 	DIM altezza:a VIR larghezza:l PV
 						parser.report_error("Dimension declaration error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
 						parser.error=true;
 					}
+				:} |
+				DIM error 
+				{:
+					parser.report_error("Syntax error in DIMENSION declaration",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:}|
+				DIM larghezza:l error 
+				{:
+					parser.report_error("Missing heigth declaration ",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:}|
+				DIM altezza:a error 
+				{:
+					parser.report_error("Missing width declaration",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
 				:};
 		
 altezza	::=	HEIGHT UGUALE INT:i 
@@ -171,7 +191,12 @@ larghezza ::=	WIDTH UGUALE INT:i
 				:};
 		
 
-numBlocchi ::=	NMOB INT:i PV {: parser.blocchiMobili=((Integer)i).intValue(); :} ;
+numBlocchi ::=	NMOB INT:i PV {: parser.blocchiMobili=((Integer)i).intValue(); :} |
+				NMOB error
+				{:
+					parser.report_error("Syntax error in NUMBER OF BLOCK declaration",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true; 
+				:};
 
 definizioni ::=	elemento |
 				definizioni elemento /* |
@@ -179,12 +204,14 @@ definizioni ::=	elemento |
 
 elemento ::=	VAR def PV 
 				{:
-					if (parser.error==true){
-						parser.report_error("Declaration error",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
-						SemanticErrorNumber++;
+					if (parser.error==true)
 						RESULT=null;
-					}
-				:}; // definizioni di varabili
+				:}|
+				VAR error 
+				{:
+					parser.report_error("Syntax error in variable definition",CUP$SokoParserCup$stack.elementAt(CUP$SokoParserCup$top));
+					parser.error=true;
+				:}; 
 
 def	::=	def VIR definizione |
 		definizione  
@@ -204,7 +231,6 @@ definizione ::= ID:i UGUALE INT:n
 					
 
 				:}|
-				//ID:i1 UGUALE ID:i2 
 				ID:i1 UGUALE myID:i2 
 				{:
 					System.out.println((String)i1+"="+(String)i2);
@@ -238,7 +264,7 @@ part	::=	corpo:c {: RESULT=c; :} |
 
 corpo 	::=	cicloFor :f
 			{:
-				if (f!=null){
+				if (f!=null && !parser.error){
 					MapAndResult mar=((AzioneFor)f).executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
 						parser.error=true;
@@ -265,7 +291,7 @@ corpo 	::=	cicloFor :f
 			:} |
 			piazzamento:p 
 			{: 
-				if(p!=null){
+				if(p!=null && !parser.error){
 					AzionePiazzamento ap=(AzionePiazzamento)p;
 					MapAndResult mar=ap.executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
@@ -293,7 +319,7 @@ corpo 	::=	cicloFor :f
 			:} |
 			sezioneIF :si
 			{:
-				if(si!=null){
+				if(si!=null && !parser.error){
 					AzioneIf ai=(AzioneIf)si;
 					MapAndResult mar=ai.executeAction(varMap, parser.mappa);
 					if (mar.result!=Result.OK){
@@ -441,7 +467,7 @@ contenuto ::=	piazzamento:p /*creo lista azioni */
 						parser.error=true;
 						RESULT=null;
 					}
-					else
+					else 
 						RESULT=new ListaAzioni(p);
 				:}	| 
 				

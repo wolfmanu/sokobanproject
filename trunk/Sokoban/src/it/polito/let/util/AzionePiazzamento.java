@@ -30,6 +30,12 @@ public class AzionePiazzamento implements Azione{
 			int x=0, y=0,xTmp, yTmp;
 			MapAndResult mar=new MapAndResult();
 			
+			if(mappa==null){
+				mar.setErrMsg("Map not defined");
+				return mar;
+			}
+				
+			
 			xTmp=element.traduci(this.x, varMap);
 			yTmp=element.traduci(this.y, varMap);
 			if(xTmp==-1 ){
