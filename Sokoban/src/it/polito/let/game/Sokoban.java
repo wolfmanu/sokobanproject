@@ -373,10 +373,10 @@ public class Sokoban extends Applet {
 	Image tiles[] = new Image[9];
 	
 	//AudioClip buzz, wow;
-	InputStream in1 = null;
+	/*InputStream in1 = null;
 	AudioStream wow=null;
 	InputStream in2 = null;
-	AudioStream doh=null;
+	AudioStream doh=null;*/
 	
 	
 	SokoPieces levelS[];
@@ -423,7 +423,7 @@ public class Sokoban extends Applet {
 		setSize(800, 600);
 		/************/
 		
-		try {
+		/*try {
 			//in1 = new FileInputStream("audio/doh.wav");
 			//doh = new AudioStream(in1);   
 			in2 = new FileInputStream("audio/woohoo.wav");
@@ -434,7 +434,7 @@ public class Sokoban extends Applet {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+	*/
 
 		/************/
 		//buzz = getAudioClip(getDocumentBase(), "doh.wav");
@@ -680,7 +680,7 @@ public class Sokoban extends Applet {
 					for (int i = 0; i < levelS.length; i++) if (levelS[i] == SokoPieces.dollar) b = false;
 					if (b) {
 						//wow.play();
-						AudioPlayer.player.start(wow);
+						//AudioPlayer.player.start(wow);
 						//AudioPlayer.player.stop(wow); 
 						//try { Thread.sleep(2000); } catch (InterruptedException e) {};
 						//newLevel(currlevel + 1);
