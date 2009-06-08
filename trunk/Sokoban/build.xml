@@ -79,7 +79,7 @@
         <target name="build" depends="init, generate-artifacts" description="Build the sources">
                 <javac debug="${debug}" debuglevel="${debuglevel}" source="${source}" target="${target}" destdir="${build.dir}">
                         <src path="${generated.dir}" />
-                        <src path="${src.dir}" />
+                        <src path="${src.dir}/it/polito/let/util" />
                         <classpath>
                                 <path refid="build.classpath" />
                                 <pathelement path="${build.dir}" />
