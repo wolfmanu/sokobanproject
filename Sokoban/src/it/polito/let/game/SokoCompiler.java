@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -28,11 +29,9 @@ public class SokoCompiler
     {
     try {
         // Istanzio lo scanner aprendo il file di ingresso argv[0]
-        Lexer l = new Lexer(new FileReader("Maps/mappa1.map"));
+        Lexer l = new Lexer(new FileReader("Maps/mappaEasy.map"));
         // Istanzio il parser
         p = new SokoParserCup(l);
-        // Avvio il parser
-        p.parse();
         
         Dimension screenSize =Toolkit.getDefaultToolkit().getScreenSize();
         int dimScrX=screenSize.width, dimScrY=screenSize.height;
@@ -41,6 +40,23 @@ public class SokoCompiler
 		barraframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		barraframe.setLocation((dimScrX-400)/2, (dimScrY-400)/2);
 		barraframe.setTitle("Loading...");
+       
+		// Avvio il parser
+        try{	
+        	p.parse();
+        }catch(IOException ex){
+        	JOptionPane.showMessageDialog(barraframe, "E' stato rilevato un errore",
+					"Attenzione", JOptionPane.ERROR_MESSAGE);
+        	JTextArea msg=new JTextArea(ex.getMessage());
+    		barraframe.getContentPane().add(msg); 
+    		msg.setEditable(false);
+    		msg.setRows(1);
+    		msg.setEditable(false);
+        	barraframe.setVisible(true);
+        	return;
+        }
+       
+        
         SokoPieces[][] mappa = p.getMap();
 		if(!p.HasError()){
         	if(checkIntegrity(mappa) && colorMap(mappa)){

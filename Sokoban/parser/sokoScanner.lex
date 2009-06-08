@@ -124,7 +124,7 @@ import it.polito.let.util.TipoCondizione;
 	
 	{nl}		{;}
 	{spazi}		{;}
-	{any}		{error();}
+	{any}		{ error(); }
 	}
 
 <COMMENTO> {
