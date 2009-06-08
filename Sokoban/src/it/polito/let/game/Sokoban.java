@@ -20,8 +20,8 @@ import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
+//import sun.audio.AudioPlayer;
+//import sun.audio.AudioStream;
 
 public class Sokoban extends Applet {
 

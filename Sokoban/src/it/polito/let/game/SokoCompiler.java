@@ -29,7 +29,8 @@ public class SokoCompiler
     {
     try {
         // Istanzio lo scanner aprendo il file di ingresso argv[0]
-        Lexer l = new Lexer(new FileReader("Maps/mappaEasy.map"));
+    	System.out.println("Opening file "+argv[0]);
+    	Lexer l = new Lexer(new FileReader(argv[0]));
         // Istanzio il parser
         p = new SokoParserCup(l);
         
@@ -178,13 +179,13 @@ public class SokoCompiler
 		for(int i=0; i<5; i++)
 				if ( (posx+offq[i])>=0 && (posy+offr[i])>=0 && 
 						(posx+offq[i])<Map.length && (posy+offr[i])<Map[0].length){
-					System.out.println("Checking Map["+(posx+offq[i])+"]["+(posy+offr[i])+"]="+Map[posx+offq[i]][posy+offr[i]].name());
+					//System.out.println("Checking Map["+(posx+offq[i])+"]["+(posy+offr[i])+"]="+Map[posx+offq[i]][posy+offr[i]].name());
 					if(Map[posx+offq[i]][posy+offr[i]]!=SokoPieces.blank && 
 							Map[posx+offq[i]][posy+offr[i]]!=SokoPieces.wall){
 						if(Map[posx+offq[i]][posy+offr[i]]==SokoPieces.floor){
 							Map[posx+offq[i]][posy+offr[i]]=SokoPieces.blank;
 							//coloredMap[posx+offq][posy+offr]=true;
-							System.out.println("Richiamo");
+							//System.out.println("Richiamo");
 							if((Map=checkBounds(Map, posx+offq[i], posy+offr[i]))==null)
 								return null;
 						}
