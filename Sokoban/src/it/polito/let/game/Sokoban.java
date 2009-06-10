@@ -353,13 +353,21 @@ public class Sokoban extends Applet {
 							}*/;
 			
 	
-	final static String images[]= {	"muro_16.gif",
+/*final static String images[]= {	"muro_16.gif",
 									"sokoban_16.gif",
 									"ball_16.gif",
 									"goal_16.gif",
 									"floor.gif",
 									"occupied_16.gif",
 									"megoal_16.gif"
+									};	*/
+final static String images[]= {	"muro_16.gif",
+									"sokoban_16.gif",
+									"ball_16.jpg",
+									"hole_16.jpg",
+									"floor.gif",
+									"hole_ball_16.jpg",
+									"hole_soko_16.jpg"
 									};		
 	/*final static char wall = '#';
 	final static char floor = ' ';
@@ -685,7 +693,8 @@ public class Sokoban extends Applet {
 						//try { Thread.sleep(2000); } catch (InterruptedException e) {};
 						//newLevel(currlevel + 1);
 						//repaint();
-						ImageIcon im=new ImageIcon("img/cup.png");
+						/**///ImageIcon im=new ImageIcon("img/cup.png");
+						ImageIcon im=new ImageIcon("img/smile-logo.png");
 						JOptionPane.showMessageDialog(this, "Complimenti hai vinto!",
 													"Vittoria!", JOptionPane.PLAIN_MESSAGE, im);
 						this.stop();

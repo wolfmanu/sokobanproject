@@ -13,7 +13,7 @@
         
       
         <property name="keep.artifacts" value="false" />
-		<property name="map.game" value="mappa1.map" />
+		<property name="map.game" value="Maps/mappa1.map" />
         
                 
 		<taskdef name="cup"  classname="java_cup.anttask.CUPTask"  classpath="${cup.jar}"       />
