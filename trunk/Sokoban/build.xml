@@ -49,7 +49,7 @@
 
 
         <target name="chk-artifacts">
-                <uptodate property="generate-artifacts.notRequired" targetfile="${generated.dir}/.flagfile">
+                <uptodate property="generate-artifacts.notRequired" value="true" targetfile="${generated.dir}/.flagfile">
                         <srcfiles dir="${parser.dir}">
                                 <include name="**/*.cup" />
                                 <include name="**/*.lex" />
@@ -57,11 +57,47 @@
                 </uptodate>
         </target>
 
-        <target name="lex" unless="generate-artifacts.notRequired" depends="init">
+		<target name="chk-all" depends="chk-artifacts, chk-existance">
+			<property name="to.generate" value="true"/>
+			<condition property="condition2">
+				<and>
+					<istrue value="${file.exists}"/>
+					<istrue value="${generate-artifacts.notRequired}"/>
+				</and>
+			</condition>
+			<antcall target="not-to-generate"/>
+		</target>
+			
+		<target name="not-to-generate" if="condition2">
+			<property name="to.generate" value="false"/>
+		</target>
+	
+		<target name="chk-existance">
+			<condition property="condition">
+				<and>
+			      	<available file="${generated.dir}/it/polito/let/generated/SokoParserCup.java"/>
+					<available file="${generated.dir}/it/polito/let/generated/SokoParserSym.java"/>
+					<available file="${generated.dir}/it/polito/let/generated/Lexer.java"/>
+				</and>
+			</condition>
+			<antcall target="then"/>
+			<antcall target="file.not-exist"/>
+		</target>
+	
+		<target name="then" if="condition">
+			<echo>All the files exist.</echo>
+			<property name="file.exists" value="true"/>
+		</target>
+	
+		<target name="file.not-exist" unless="condition">
+			<property name="file.exists" value="false"/>
+		</target>
+	
+        <target name="lex"  if="to.generate" depends="init">
                 <jflex file="${parser.dir}/sokoScanner.lex" destdir="${generated.dir}" />
         </target>
         
-        <target name="cup" unless="generate-artifacts.notRequired" depends="init, lex">
+        <target name="cup" if="to.generate" depends="init, lex">
                 <cup srcfile="${parser.dir}/sokoParser.cup" destdir="${generated.dir}"
                         parser="SokoParserCup"
                         symbols="SokoParserSym"
@@ -72,11 +108,11 @@
         </target>
 
         
-        <target name="generate-artifacts" unless="generate-artifacts.notRequired" depends="init, chk-artifacts, lex, cup">
+        <target name="generate-artifacts"  if="to.generate" depends="init,chk-all, lex, cup">
                 <touch file="${generated.dir}/.flagfile" />
         </target>
 
-        <target name="build" depends="init, generate-artifacts" description="Build the sources">
+        <target name="build" depends="init, generate-artifacts " description="Build the sources">
                 <javac debug="${debug}" debuglevel="${debuglevel}" source="${source}" target="${target}" destdir="${build.dir}">
                         <src path="${generated.dir}" />
                         <src path="${src.dir}/it/polito/let/util" />
@@ -87,7 +123,7 @@
                 </javac>
         </target>
  
-        <target name="play.game" depends="build">
+        <target name="play.game" depends="build" description="Play the game">
                 <echo>Starting game ${map.game}</echo>
                 <java classname="it.polito.let.game.SokoCompiler" failonerror="true" fork="yes">
                         <arg value="${map.game}" />
@@ -97,5 +133,18 @@
                         </classpath>
                 </java>
         </target>
+	 
+		<target name="help" description="Help">
+			 <echo>-------------------- Sokoban Game --------------------</echo>
+			 <echo> </echo>
+			 <echo>To compile: </echo>
+			 <echo>            ant build  </echo>
+			 <echo> </echo>
+		 	 <echo>To play:</echo>
+		 	 <echo>            ant play.game [-Dmap.game="fileName.map"]</echo>
+			 <echo> </echo>
+			 <echo>I hope you'll enjoy it!!</echo>
+			 <echo>------------------------------------------------------</echo>
+		</target>
 </project>
 

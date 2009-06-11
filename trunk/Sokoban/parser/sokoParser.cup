@@ -1,6 +1,6 @@
 package it.polito.let.generated;
-
-import java.util.*;
+ 
+import java.util.*;   
     
 import java_cup.runtime.*;
 import it.polito.let.util.AzioneFor;
