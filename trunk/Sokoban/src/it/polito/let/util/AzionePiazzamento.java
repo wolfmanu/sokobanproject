@@ -34,7 +34,6 @@ public class AzionePiazzamento implements Azione{
 				mar.setErrMsg("Map not defined");
 				return mar;
 			}
-				
 			
 			xTmp=element.traduci(this.x, varMap);
 			yTmp=element.traduci(this.y, varMap);
@@ -58,8 +57,6 @@ public class AzionePiazzamento implements Azione{
 				mar.setErrMsg("Not initialized variable "+((strVar)this.y).x);
 				return mar;
 			}
-			
-			/**/System.out.println(type.name()+"("+(xTmp-1)+","+(yTmp-1)+")");
 			
 			if ( xTmp>mappa.length || yTmp > mappa[0].length || xTmp<1 || yTmp<1){
 				mar.result=Result.IndexOutOfBound;

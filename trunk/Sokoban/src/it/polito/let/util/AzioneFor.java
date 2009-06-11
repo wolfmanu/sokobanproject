@@ -17,7 +17,7 @@ public class AzioneFor implements Azione{
 		MapAndResult mar=new MapAndResult();
 		mar.mappa=mappa;
 		varMap.put(var, new Integer(start));
-		System.out.println("Putting "+var+"="+start);
+
 		while(cond.valute(varMap)){
 			Iterator<Azione> it=la.getActions().iterator();
 			while(it.hasNext()){
