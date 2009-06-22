@@ -12,20 +12,14 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Rectangle;
-//import java.io.FileInputStream;
-//import java.io.FileNotFoundException;
-//import java.io.IOException;
-//import java.io.InputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-//import sun.audio.AudioPlayer;
-//import sun.audio.AudioStream;
 
 public class Sokoban extends Applet {
 
-	/*String levels[] = {
+	/* Esempi di livelli in formato di stringa
 	
 		"M^^^^#####" +
 		"M^^^^#   #" +
@@ -323,45 +317,14 @@ public class Sokoban extends Applet {
 	
 	};*/
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -7627879419613904118L;
 
 
-	SokoPieces levels[] /*= { 
-							{//SokoPieces.cr,
-							//SokoPieces.blank, 
-							SokoPieces.wall, 
-							SokoPieces.wall,
-							SokoPieces.cr,
-							SokoPieces.wall,
-							SokoPieces.me,
-							SokoPieces.cr,
-							SokoPieces.goal,
-							SokoPieces.goal},
-							
-							{//SokoPieces.cr,
-							//SokoPieces.blank, 
-							SokoPieces.wall, 
-							SokoPieces.wall,
-							//SokoPieces.cr,
-							SokoPieces.wall,
-							SokoPieces.me,
-							SokoPieces.goal,
-							SokoPieces.goal}
-							}*/;
+	SokoPieces levels[] ;
 			
-	
-/*final static String images[]= {	"muro_16.gif",
-									"sokoban_16.gif",
-									"ball_16.gif",
-									"goal_16.gif",
-									"floor.gif",
-									"occupied_16.gif",
-									"megoal_16.gif"
-									};	*/
-final static String images[]= {	"muro_16.gif",
+
+	final static String images[]= {	"muro_16.gif",
 									"sokoban_16.gif",
 									"ball_16.jpg",
 									"hole_16.jpg",
@@ -369,26 +332,11 @@ final static String images[]= {	"muro_16.gif",
 									"hole_ball_16.jpg",
 									"hole_soko_16.jpg"
 									};		
-	/*final static char wall = '#';
-	final static char floor = ' ';
-	final static char me = '@';
-	final static char megoal = '&';
-	final static char occupied = '*';
-	final static char dollar = '$'; //ball
-	final static char cr = 'M';
-	final static char blank = '^';
-	final static char goal = '.';*/
+
 	Image tiles[] = new Image[9];
 	
-	//AudioClip buzz, wow;
-	/*InputStream in1 = null;
-	AudioStream wow=null;
-	InputStream in2 = null;
-	AudioStream doh=null;*/
-	
-	
 	SokoPieces levelS[];
-	//char[] level;
+	
 	int currlevel, w, h, push, move;
 	int lastcount, pos1, pos2, pos3;
 	Rectangle lastrect;
@@ -412,7 +360,7 @@ final static String images[]= {	"muro_16.gif",
 		h=(mappa.length);
 		w=(mappa[0].length+1);
 		SokoPieces[] newMap=new SokoPieces[h*w];
-		//System.out.println("creo mappa "+w+"x"+h);
+		
 		for(int i=0, k=0; i<mappa.length; i++){
 			for(int j=0; j<mappa[i].length; j++, k++)
 				newMap[k]=mappa[i][j];
@@ -420,37 +368,15 @@ final static String images[]= {	"muro_16.gif",
 			k++;
 			}
 		
-		/*for(int i=0; i<newMap.length; i++){
-			System.out.println("newMap["+i/w+"]["+i%w+"]"+newMap[i]);
-		}*/
 		return newMap;
 	}
 
 
 	public void init() {
 		setSize(800, 600);
-		/************/
 		
-		/*try {
-			//in1 = new FileInputStream("audio/doh.wav");
-			//doh = new AudioStream(in1);   
-			in2 = new FileInputStream("audio/woohoo.wav");
-			wow = new AudioStream(in2);   
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	*/
-
-		/************/
-		//buzz = getAudioClip(getDocumentBase(), "doh.wav");
-		//wow = getAudioClip(getDocumentBase(), "woohoo.wav");
 		MediaTracker tracker = new MediaTracker(this);
 		
-		
-		//String tile = "# @$.&*";
 		SokoPieces tile[] ={SokoPieces.wall, 
 							SokoPieces.me,
 							SokoPieces.dollar,
@@ -458,40 +384,21 @@ final static String images[]= {	"muro_16.gif",
 							SokoPieces.floor,
 							SokoPieces.occupied,
 							SokoPieces.megoal};
-		//Graphics g;
-		
-		//for (int i = 0; i < tile.length(); i++) {
 		Image j=null;
-		//URL url=null;
-		/*try {
-			String resource1 = images[0];
-			// safest to use context class loader
-			//url = Thread.currentThread().setContextClassLoader().getResource(resource1);
-
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		}*/
-			//String tile = "#@$.";
-			for (int i = 0; i < tile.length; i++) {
-				//j = getImage(getCodeBase(),"../img/"+images[i]);
-				//File f=new File("img/"+images[i]);
-				//if(!f.exists()) System.out.println("err");
-				ImageIcon ji = new ImageIcon("img/"+images[i]);
-				//System.out.println(ji);
-				j=ji.getImage();
-					//System.out.println(j);
-				tracker.addImage(j,i);
-				try { tracker.waitForAll(); } catch (InterruptedException e) {}
-				tiles[tile[i].ordinal()] =j;
-				//tiles[tile[i].ordinal()] = createImage(16, 16);
-				//Graphics g = tiles[tile[i].ordinal()].getGraphics();
-				//g.drawImage(j, -i*16, 0, this);
-			}			
-			j.flush();
-			
-			newLevel(0);
-			requestFocus();
-		}
+		
+		for (int i = 0; i < tile.length; i++) {
+			ImageIcon ji = new ImageIcon("img/"+images[i]);
+			j=ji.getImage();
+			tracker.addImage(j,i);
+			try { tracker.waitForAll(); } catch (InterruptedException e) {}
+			tiles[tile[i].ordinal()] =j;
+		
+		}			
+		j.flush();
+		
+		newLevel(0);
+		requestFocus();
+	}
 		
 		public void start() {}
 		
@@ -501,24 +408,15 @@ final static String images[]= {	"muro_16.gif",
 			
 		public void paint(Graphics g) {
 			update(g);
-			/*Image j=null, tiles[]=new Image[4];
-			for (int i = 0; i < 4; i++) {
-				j = getImage(getDocumentBase(),"../img/"+images[i]);
-				MediaTracker tracker=new MediaTracker(this);
-				tracker.addImage(j,0);
-				try { tracker.waitForAll(); } catch (InterruptedException e) {}
-				tiles[i]=j;
-				g.drawImage(tiles[i],20+i*16,20,this);
-			}*/
 		}
 		
 		public synchronized void update(Graphics g) {
 			Dimension d = getSize();
-			//System.out.println("dim="+d);
-			if (d.width * d.height == 0) return; // supposedly this can happen!
+			
+			if (d.width * d.height == 0) return; 
 			Rectangle r = g.getClipBounds();
-			//System.out.println("rect="+r);
-			if (r.x < 72) { // only do this if necessary!
+			
+			if (r.x < 72) { 
 				g.setColor(Color.lightGray);
 				g.fillRect(0, 0, d.width, d.height);
 				g.setFont(fontb);
@@ -527,8 +425,7 @@ final static String images[]= {	"muro_16.gif",
 				g.setFont(font);
 				g.setColor(Color.black);
 				String help[] = { "h=Left", "j=Down", "k=Up", "l=Right", " (or Arrows)",
-					"H,J,K,L=", " FastMove", "u=Undo", "A=Restart", "S=Save", "R=Restore",
-					"+=UpLevel", "-=DownLevel" };
+					"H,J,K,L=", " FastMove", "u=Undo", "A=Restart", "S=Save", "R=Restore"};
 				for (int i = 0; i < help.length; i++)
 					g.drawString(help[i], 0, 80 + 16 * i);
 				g.setFont(fontb);
@@ -537,7 +434,7 @@ final static String images[]= {	"muro_16.gif",
 				g.drawString("Push:", 0, 64);
 				drawStatus(g);
 			}
-			//System.out.println("h="+h+"; w="+w);
+			
 			int y = -16 + h, x = -16 + w;
 			for (int i = 0; i < levelS.length; i++)
 				if (levelS[i] == SokoPieces.cr) {
@@ -545,10 +442,8 @@ final static String images[]= {	"muro_16.gif",
 				} else {
 					x += 16;
 					if (levelS[i] == SokoPieces.blank) continue;
-					if (r.contains(x,y)) {// only draw the images necessary for move!
-						//System.out.println("("+x/16+","+y/16+")="+levelS[i]);
+					if (r.contains(x,y)) {
 						int k=levelS[i].ordinal();
-						
 						g.drawImage(tiles[k], x, y, this);
 					}
 				}
@@ -566,7 +461,7 @@ final static String images[]= {	"muro_16.gif",
 		
 		public void drawMove() {
 			Graphics g = getGraphics();
-			drawStatus(g); // order is important, since update munges the clipRect
+			drawStatus(g); 
 			repaint(lastrect.x, lastrect.y, lastrect.width, lastrect.height);
 		}
 			
@@ -582,10 +477,6 @@ final static String images[]= {	"muro_16.gif",
 				case 'k': case Event.UP: movearound(0, -1); break;
 				case 'J': uc = true;
 				case 'j': case Event.DOWN: movearound(0, 1); break;
-				//case '+':
-				/*case '-': currlevel += e.key == '+' ? 1 : -1;
-							if (currlevel < 0) currlevel = 0;
-							else if (currlevel == levels.length) currlevel = levels.length - 1;*/
 				case 'a':
 				case 'A': 
 					scelta=JOptionPane.showConfirmDialog(this, "Vuoi davvero ricominciare da capo?");
@@ -614,7 +505,7 @@ final static String images[]= {	"muro_16.gif",
 		
 		public void newLevel(int l) {
 			currlevel = l; push = 0; move = 0;
-			//w = 0; h = 0; levelS = levels[currlevel];
+			
 			w = 0; h = 0; 
 			levelS=new SokoPieces[levels.length];
 			System.arraycopy(levels ,0, levelS, 0, levels.length);
@@ -687,13 +578,6 @@ final static String images[]= {	"muro_16.gif",
 					boolean b = true;
 					for (int i = 0; i < levelS.length; i++) if (levelS[i] == SokoPieces.dollar) b = false;
 					if (b) {
-						//wow.play();
-						//AudioPlayer.player.start(wow);
-						//AudioPlayer.player.stop(wow); 
-						//try { Thread.sleep(2000); } catch (InterruptedException e) {};
-						//newLevel(currlevel + 1);
-						//repaint();
-						/**///ImageIcon im=new ImageIcon("img/cup.png");
 						ImageIcon im=new ImageIcon("img/smile-logo.png");
 						JOptionPane.showMessageDialog(this, "Complimenti hai vinto!",
 													"Vittoria!", JOptionPane.PLAIN_MESSAGE, im);

@@ -27,7 +27,6 @@ public class SokoCompiler
     {
     try {
         // Istanzio lo scanner aprendo il file di ingresso argv[0]
-    	System.out.println("Opening file "+argv[0]);
     	Lexer l = new Lexer(new FileReader(argv[0]));
         // Istanzio il parser
         p = new SokoParserCup(l);
@@ -98,19 +97,19 @@ public class SokoCompiler
 		
 		for(int i=0; i<map.length; i++){		//controllo a partire da tutti i punti del bordo
 			if((map=checkBounds(map, i , 0))==null){ 
-				msg.append("Checking bounds FAILED1!");
+				msg.append("Checking bounds FAILED!");
 				return false;
 			}
 			if((map=checkBounds(map, i , map[0].length-1))==null){ 
-				msg.append("Checking bounds FAILED2!");
+				msg.append("Checking bounds FAILED!");
 				return false;
 			}
 			if((map=checkBounds(map, 0 , i))==null){ 
-				msg.append("Checking bounds FAILED3!");
+				msg.append("Checking bounds FAILED!");
 				return false;
 			}
 			if((map=checkBounds(map, map.length-1 , i))==null){ 
-				msg.append("Checking bounds FAILED4!");
+				msg.append("Checking bounds FAILED!");
 				return false;
 			}
 		}
