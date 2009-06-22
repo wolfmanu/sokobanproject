@@ -12,20 +12,19 @@ for(x=1;x<=width;x++)
    #F(x,1);
    #F(x,h);
 end for;
+
 for(x=1;x<=h;x++)
    #F(1,x);
-   if(x!=5)
-   		#F(width,x);
-   	end if;
+   #F(width,x);
 end for;
 
 //if(x!=1)
-//	#F(t,5);
+//	#F(y,5);
 //end if;
 
 if(x==1)   
    for(x=1;x<=width;x++)
-      #F(t,h);
+      #F(x,h);
    end for;
 end if;
 
