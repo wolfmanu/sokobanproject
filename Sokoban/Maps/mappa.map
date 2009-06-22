@@ -1,4 +1,4 @@
-var width = 10;
+var width;
 
 
 #Dimensioni h=10, w=width;
