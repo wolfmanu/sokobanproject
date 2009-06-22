@@ -1,6 +1,5 @@
 var width;
 
-
 #Dimensioni h=10, w=width;
 #BlocchiMobili 5;
 
