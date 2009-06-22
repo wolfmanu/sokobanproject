@@ -1,6 +1,5 @@
 var width = 10;
 
-//var x;
 
 #Dimensioni h=10, w=width;
 #BlocchiMobili 5;
@@ -13,30 +12,22 @@ for(x=1;x<=width;x++)
    #F(x,h);
 end for;
 
-for(x=1;x<=h;x++)
+for(x=1;x<=h;x++)		
    #F(1,x);
    #F(width,x);
 end for;
 
-//if(x!=1)
+
+//if(x!=1)			//Commentato
 //	#F(y,5);
 //end if;
 
-if(x==1)   
-   for(x=1;x<=width;x++)
-      #F(x,h);
-   end for;
+if(x==1)   			//Non verrà eseguito in quanto x=h in questo momento
+      #F(2,2);
 end if;
 
-for(x=1;x<=width;x++)
-   #F(x,h);
-   if(x==1)
-      #F(x,1);
-   end if;
-end for;
-
 // posizionamento dei blocchi mobili
-#M(2,4);
+#M(3,4);
 #M(y,4);
 
 // posizionamento degli obiettivi
@@ -48,7 +39,7 @@ end for;
 
 #g(7,5);
 #M(6,4);
-#m(5,5);
+#m(5,5);		// Notare che non è case sensitive
 #M(4,4);
 #G(6,6);
 #G(6,2);
